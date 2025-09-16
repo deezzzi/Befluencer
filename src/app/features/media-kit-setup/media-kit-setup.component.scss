@@ -145,7 +145,10 @@
 
 /* Socials & Stats */
 .socials-step { padding:1rem 0 0; }
-.platform-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1.1rem 1.85rem; }
+.platform-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:1.1rem 1.85rem; }
+@media (max-width:1200px){ .platform-grid { grid-template-columns:repeat(3, 1fr); } }
+@media (max-width:900px){ .platform-grid { grid-template-columns:repeat(2, 1fr); } }
+@media (max-width:640px){ .platform-grid { grid-template-columns:1fr; } }
 /* Stepper cards use the new card style */
 .platform-card { border:1px solid #e2e8f0; border-radius:12px; padding:.7rem .85rem .65rem; background:#fff; position:relative; display:flex; flex-direction:column; min-height:96px; box-shadow:0 2px 4px -2px rgba(0,0,0,0.06), 0 4px 12px -2px rgba(0,0,0,0.08); }
 .platform-card .top-row { display:flex; align-items:flex-start; gap:.55rem; }
