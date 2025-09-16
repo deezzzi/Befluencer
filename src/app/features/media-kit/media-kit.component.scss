@@ -1,0 +1,77 @@
+/* Media Kit Empty State Styling */
+.media-kit-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2.5rem 2rem 4rem;
+  overflow-y: auto;
+}
+
+.empty-card {
+  --card-border: #e5e5e5;
+  background: #fafafa;
+  width: 100%;
+  max-width: 920px;
+  min-height: 520px;
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4.5rem 2rem 3.5rem;
+  text-align: center;
+  font-family: Inter, system-ui, sans-serif;
+  position: relative;
+}
+
+.icon-stack { margin-bottom: 1.25rem; }
+.icon-stack svg { display: block; }
+
+.title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #222;
+  margin: 0 0 1.1rem;
+}
+
+.desc {
+  max-width: 380px;
+  font-size: 0.63rem; /* roughly 10px */
+  line-height: 1.45;
+  color: #444;
+  margin: 0 0 1.1rem;
+  font-weight: 400;
+}
+
+.setup-btn {
+  margin-top: 0.35rem;
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  background: #ff7a00;
+  color: #fff;
+  font-size: 0.55rem; /* ~9px for compact pill */
+  font-weight: 500;
+  letter-spacing: .2px;
+  padding: 0.45rem 0.85rem 0.43rem;
+  border-radius: 999px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 2px 3px -1px rgba(0,0,0,0.12), 0 1px 1px rgba(0,0,0,0.06);
+  transition: background .18s ease, box-shadow .18s ease;
+}
+.setup-btn:hover { background: #ff8a1f; }
+.setup-btn:active { background: #f37000; box-shadow: 0 1px 2px rgba(0,0,0,0.25) inset; }
+.setup-btn:focus-visible { outline: 2px solid #ffb167; outline-offset: 2px; }
+.setup-btn .plus { font-weight: 600; font-size: 0.75rem; line-height: 1; }
+
+@media (max-width: 640px) {
+  .empty-card { padding: 3.5rem 1.25rem 2.5rem; min-height: 460px; }
+  .desc { font-size: 0.68rem; }
+  .setup-btn { font-size: 0.6rem; }
+}
