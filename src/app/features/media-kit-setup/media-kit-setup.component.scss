@@ -1,3 +1,55 @@
+/* Rates & Services — match Figma */
+.rates-step {
+  /* Charging rate options */
+  .rate-options { list-style:none; margin:.25rem 0 .9rem; padding:0; }
+  .rate-options li { display:flex; align-items:center; gap:.55rem; margin:.35rem 0; cursor:pointer; user-select:none; color:#2b2b2b; }
+  .rate-options .radio-box {
+    width:16px; height:16px; border:2px solid #ff9c40; border-radius:4px; display:inline-flex; align-items:center; justify-content:center; background:#fff; transition:background-color .15s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .rate-options .radio-box.on { background:#ff7a00; border-color:#ff7a00; box-shadow:0 0 0 2px rgba(255,122,0,0.08); }
+  .rate-options .radio-box svg { display:block; }
+  .rate-options .radio-label { font-size:.82rem; }
+
+  /* Enter Amount row */
+  .amount-head { margin:.9rem 0 .5rem; }
+  /* Currency short, Amount long with clear space between */
+  .amount-row { display:flex; align-items:center; gap:1.2rem; }
+  .amount-row .currency { flex:0 0 100px; width:100px; }
+  .amount-row .currency .input-icon { width:100%; }
+  .amount-row .amount-field { flex:1 1 auto; }
+
+  /* Currency dropdown as compact pill */
+  /* Remove outer label border/shadow to avoid double border */
+  .amount-row .currency.dropdown { border:0 !important; background:transparent; padding:0; box-shadow:none !important; }
+  .amount-row .currency.dropdown.open { border:0 !important; box-shadow:none !important; }
+  .amount-row .currency .input-icon { 
+    display:flex; align-items:center; justify-content:space-between; gap:.35rem; 
+    height:40px; min-width:88px; padding:0 .6rem; 
+    border:1px solid #e6e6e6; border-radius:12px; background:#fff; 
+    overflow:hidden; /* ensures crisp rounded border */
+  }
+  .amount-row .currency .input-icon input { 
+    border:none; outline:none; background:transparent; width:auto; flex:1; 
+    color:#9aa1a5; font-weight:600; padding:0; 
+  }
+  .amount-row .currency .chevron { flex:0 0 auto; }
+  .amount-row .currency.open .input-icon { border-color:#b06dfc; box-shadow:0 0 0 1px #b06dfc inset; }
+
+  /* Amount input */
+  .amount-row .amount-field input { 
+    height:40px; width:100%; min-width:0; padding:0 .75rem; 
+    border:1px solid #e6e6e6; border-radius:12px; background:#fff; 
+  }
+  .amount-row .amount-field input::placeholder { color:#b8b8b8; }
+  .amount-row .amount-field input:focus { outline:none; border-color:#b06dfc; box-shadow:0 0 0 1px #b06dfc inset; }
+
+  /* Stack nicely on small screens */
+  @media (max-width: 640px) {
+    .amount-row { flex-wrap:wrap; }
+    .amount-row .currency { flex:0 0 100%; width:100%; }
+    .amount-row .amount-field { flex:0 0 100%; }
+  }
+}
 /* Collaborations: brands dropdown highlight per Figma */
 .collab-step {
   .dropdown-panel {
@@ -120,7 +172,7 @@
 .select { position:relative; }
 
 /* Buttons */
-.actions { display:flex; align-items:center; justify-content:flex-end; margin-top:auto; padding-top:.9rem; gap:.9rem; border-top:1px solid #f1f1f1; }
+.actions { display:flex; align-items:center; justify-content:flex-end; margin-top:auto; padding-top:.9rem; gap:.9rem; border-top:0; }
 .actions button { border:none; cursor:pointer; font-family:inherit; font-size:.6rem; line-height:1; display:inline-flex; align-items:center; gap:.35rem; padding:.55rem .9rem .5rem; border-radius:999px; font-weight:500; transition:background .18s ease, color .18s ease, border-color .18s ease; }
 .actions button svg { stroke-width:2; }
 .actions .back { background:transparent; color:#ff7a00; padding-left:.55rem; padding-right:.55rem; }
@@ -324,8 +376,8 @@
 }
 .preview-card h3 { margin:0; font-size:.58rem; font-weight:600; color:#ff7a00; }
 .preview-card .card-head { display:flex; align-items:center; justify-content:space-between; margin:0 0 .55rem; }
-.icon-btn { background:transparent; border:none; font-size:.55rem; cursor:pointer; color:#b06dfc; padding:.15rem .3rem; border-radius:4px; }
-.icon-btn:hover { background:#f4eefb; }
+.icon-btn { background:transparent; border:none; font-size:.55rem; cursor:pointer; color:#BA68C8; padding:.15rem .3rem; border-radius:4px; }
+.icon-btn:hover { background:#f5edf9; }
 .summary-card { grid-column:span 1; height:auto; align-self:start; padding-bottom:.25rem; }
 .summary-inner { display:flex; align-items:center; height:auto; gap:1rem; padding-right:3.2rem; }
 .summary-inner .last-updated { display:flex; flex-direction:column; gap:.3rem; font-size:.46rem; }
