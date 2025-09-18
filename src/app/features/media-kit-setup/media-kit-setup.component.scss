@@ -334,7 +334,7 @@
 .preview-header { margin:0 0 1.2rem; }
 .preview-title { font-size:.95rem; color:#ff7a00; margin:0; font-weight:600; letter-spacing:.2px; }
 .preview-pane { text-align:left; padding:1.4rem 0 0; }
-.preview-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); column-gap:15px; row-gap:15px; }
+.preview-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); column-gap:15px; row-gap:10px; }
 /* Use min-content for the first row so a tall item spanning rows (Services) doesn't inflate row 1.
   This keeps Summary/Collaborations at natural height and ensures Basic Info sits ~15px below. */
 .preview-grid.design-layout { grid-template-columns:repeat(3, 1fr); grid-template-rows:min-content auto auto; }
@@ -351,9 +351,11 @@
 .area-contact { grid-area:contact; }
 /* Nudge Basic Info upward on desktop to visually close the gap under the top row */
 @media (min-width:1101px){
-  /* Removed negative margin to prevent overlap with Summary/Status card across different content heights */
-  .preview-grid.design-layout .area-basic { margin-top:0; }
-  .preview-grid.design-layout .area-socials { margin-top:15px; }
+  /* Pull Basic Info upward to sit just under Summary while other first-row cards remain taller.
+    Fine-tuned to avoid overlap with the Summary card. */
+  .preview-grid.design-layout .area-basic { margin-top:-140px; }
+  /* Ensure equal vertical spacing by relying solely on the grid row-gap */
+  .preview-grid.design-layout .area-socials { margin-top:0; }
 }
 @media (max-width:1100px){
   .preview-grid.design-layout { grid-template-columns:repeat(2,1fr); grid-template-rows:auto; grid-template-areas:
