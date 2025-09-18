@@ -647,8 +647,29 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
     // Optional: also set document title
     if(typeof document !== 'undefined') document.title = title;
   }
-  next(){ if(this.activeStep < this.steps.length-1){ this.activeStep++; this.emitTitle(); this.saveDraftInternal(false); } }
-  prev(){ if(this.activeStep>0){ this.activeStep--; this.emitTitle(); this.saveDraftInternal(false); } }
+  next(){
+    // Validate current step before proceeding
+    if(!this.validateCurrentStep()){
+      this.submitted = true;
+      return;
+    }
+    if(this.activeStep < this.steps.length-1){
+      this.activeStep++;
+      this.submitted = false; // reset error flag when moving to a new step
+      this.closeAllDropdowns();
+      this.emitTitle();
+      this.saveDraftInternal(false);
+    }
+  }
+  prev(){
+    if(this.activeStep>0){
+      this.activeStep--;
+      this.submitted = false; // reset error flag when moving steps
+      this.closeAllDropdowns();
+      this.emitTitle();
+      this.saveDraftInternal(false);
+    }
+  }
   saveDraft(){ this.saveDraftInternal(true); }
   private saveDraftInternal(explicit: boolean){
     const snapshot = this.state.snapshot({
@@ -678,6 +699,27 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
     this.router.navigate(['/media-kit/saved']);
   }
   ngOnDestroy(){ this.destroy$.next(); this.destroy$.complete(); }
+  private validateCurrentStep(): boolean {
+    switch(this.activeStep){
+      case 0: // Basic Information
+        return this.form.valid;
+      case 2: // Collaborations
+        return this.collabForm.valid;
+      case 4: // Contact Info
+        return this.contactForm.valid;
+      default:
+        return true; // Steps without required fields
+    }
+  }
+  private closeAllDropdowns(){
+    this.openAudience = false;
+    this.openLanguages = false;
+    this.openBrands = false;
+    this.openCurrency = false;
+    this.openBookingAvailability = false;
+    this.openSocialsAccount = false;
+    this.openPreferredContact = false;
+  }
   openPreview(e: Event){ e.preventDefault(); /* TODO: open preview modal/pane */ }
   toggleAudience(){ this.openAudience = !this.openAudience; this.openLanguages = false; }
   toggleLanguages(){ this.openLanguages = !this.openLanguages; this.openAudience = false; }
