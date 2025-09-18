@@ -1,7 +1,10 @@
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { WizardStateService } from './wizard-state.service';
+import { Subject, merge } from 'rxjs';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 import { NgFor, NgIf, NgClass, SlicePipe, DecimalPipe, NgTemplateOutlet } from '@angular/common';
 
 @Component({
@@ -488,7 +491,7 @@ import { NgFor, NgIf, NgClass, SlicePipe, DecimalPipe, NgTemplateOutlet } from '
   styleUrls: ['./media-kit-setup.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MediaKitSetupComponent implements OnInit {
+export class MediaKitSetupComponent implements OnInit, OnDestroy {
   @Output() titleChange = new EventEmitter<string>();
   steps = [
     { label: 'Basic Information', desc: 'Tell us about yourself.' },
@@ -601,10 +604,42 @@ export class MediaKitSetupComponent implements OnInit {
   openBookingAvailability = false;
   openSocialsAccount = false;
   openPreferredContact = false;
+  private destroy$ = new Subject<void>();
+
   ngOnInit(){
     this.emitTitle();
     // Sanitize platform icons so SVG renders properly
     this.platforms.forEach(p => { p.iconSafe = this.sanitizer.bypassSecurityTrustHtml(p.icon); });
+    // Load existing draft if any
+    const draft = this.state.load();
+    if(draft){
+      this.activeStep = Math.min(Math.max(0, draft.activeStep), this.steps.length - 1);
+      this.form.patchValue(draft.form || {});
+      this.collabForm.patchValue(draft.collabForm || {});
+      this.ratesForm.patchValue(draft.ratesForm || {});
+      this.contactForm.patchValue(draft.contactForm || {});
+      this.selectedServices = Array.isArray(draft.selectedServices) ? draft.selectedServices.slice() : [];
+      this.brandLogoPreview = draft.brandLogoPreview || null;
+      if(Array.isArray(draft.platforms)){
+        // apply connected flags by id
+        draft.platforms.forEach(snap => {
+          const cur = this.platforms.find(p => p.id === snap.id);
+          if(cur){ cur.connected = !!snap.connected; }
+        });
+      }
+      if(Array.isArray(draft.topContents) && draft.topContents.length){
+        this.topContents = draft.topContents.slice();
+      }
+      this.emitTitle();
+    }
+
+    // Autosave on changes (debounced)
+    merge(
+      this.form.valueChanges,
+      this.collabForm.valueChanges,
+      this.ratesForm.valueChanges,
+      this.contactForm.valueChanges
+    ).pipe(debounceTime(400), takeUntil(this.destroy$)).subscribe(() => this.saveDraftInternal(false));
   }
   private emitTitle(){
     const title = this.activeStep === this.steps.length-1 ? 'Media Kit Preview' : 'Media Kit Setup';
@@ -612,17 +647,37 @@ export class MediaKitSetupComponent implements OnInit {
     // Optional: also set document title
     if(typeof document !== 'undefined') document.title = title;
   }
-  next(){ if(this.activeStep < this.steps.length-1){ this.activeStep++; this.emitTitle(); } }
-  prev(){ if(this.activeStep>0){ this.activeStep--; this.emitTitle(); } }
-  saveDraft(){ /* TODO: persist draft */ }
-  jump(i: number){ if(i < this.activeStep){ this.activeStep = i; this.emitTitle(); } }
-  constructor(private router: Router, private sanitizer: DomSanitizer){}
+  next(){ if(this.activeStep < this.steps.length-1){ this.activeStep++; this.emitTitle(); this.saveDraftInternal(false); } }
+  prev(){ if(this.activeStep>0){ this.activeStep--; this.emitTitle(); this.saveDraftInternal(false); } }
+  saveDraft(){ this.saveDraftInternal(true); }
+  private saveDraftInternal(explicit: boolean){
+    const snapshot = this.state.snapshot({
+      activeStep: this.activeStep,
+      form: this.form,
+      collabForm: this.collabForm,
+      ratesForm: this.ratesForm,
+      contactForm: this.contactForm,
+      selectedServices: this.selectedServices,
+      platforms: this.platforms.map(p => ({ id: p.id, connected: p.connected })),
+      brandLogoPreview: this.brandLogoPreview,
+      topContents: this.topContents
+    });
+    this.state.save(snapshot);
+    if(explicit){
+      // Optionally provide lightweight confirmation; could be a toast in the future
+      // eslint-disable-next-line no-alert
+      if(typeof window !== 'undefined') window.alert('Draft saved locally. You can resume later.');
+    }
+  }
+  jump(i: number){ if(i < this.activeStep){ this.activeStep = i; this.emitTitle(); this.saveDraftInternal(false); } }
+  constructor(private router: Router, private sanitizer: DomSanitizer, private state: WizardStateService){}
   finish(){
     this.submitted = true;
     this.emitTitle();
     // Navigate to saved page
     this.router.navigate(['/media-kit/saved']);
   }
+  ngOnDestroy(){ this.destroy$.next(); this.destroy$.complete(); }
   openPreview(e: Event){ e.preventDefault(); /* TODO: open preview modal/pane */ }
   toggleAudience(){ this.openAudience = !this.openAudience; this.openLanguages = false; }
   toggleLanguages(){ this.openLanguages = !this.openLanguages; this.openAudience = false; }
