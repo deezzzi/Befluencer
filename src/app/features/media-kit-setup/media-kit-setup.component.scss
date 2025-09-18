@@ -1,3 +1,21 @@
+/* Collaborations: brands dropdown highlight per Figma */
+.collab-step {
+  .dropdown-panel {
+    li {
+      border-radius: 8px; /* soft pill look from Figma */
+      transition: background-color .15s ease;
+    }
+    li:hover,
+    li:focus,
+    li.selected,
+    li.is-selected,
+    li.active,
+    li[aria-selected="true"] {
+      background: #BA68C81A; /* lavender with alpha */
+      outline: none;
+    }
+  }
+}
 /* Container & Card */
 .mk-setup-wrapper { padding: 1.8rem 1.6rem 3rem; display:flex; justify-content:center; }
 /* Main stepper container uses the new dashboard-like card style and Figma dimensions */
@@ -192,7 +210,7 @@
 .collab-step { padding:1rem 0 0; }
 .collab-grid { display:grid; grid-template-columns:240px 1fr; gap:2.2rem; align-items:start; }
 .brand-column { display:flex; flex-direction:column; gap:1.2rem; }
-.brand-upload { width:100%; aspect-ratio:1 / 1; max-width:220px; background:#fafafa; border:1px dashed #cfcfcf; border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:1rem; cursor:pointer; position:relative; }
+.brand-upload { width:100%; aspect-ratio:1 / 1; max-width:220px; background:#fafafa; border:none; border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:1rem; cursor:pointer; position:relative; }
 .brand-upload:focus { outline:2px solid #b06dfc; outline-offset:2px; }
 .brand-upload .placeholder-icon { margin-bottom:.6rem; }
 .add-logo-btn, .change-logo-btn { background:#ff7a00; color:#fff; border:none; border-radius:999px; font-size:.5rem; padding:.45rem .85rem .4rem; cursor:pointer; font-weight:500; }
