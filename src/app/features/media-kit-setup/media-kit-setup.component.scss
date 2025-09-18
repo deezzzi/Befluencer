@@ -131,6 +131,17 @@
   min-height: 0; /* allow children to size within flex */
 }
 
+/* Add right margin to Basic Info step only, without affecting preview button */
+/* Only apply margin-right to Basic Info step, not all .step-content */
+.step-content.basic-info-step {
+  margin-right: 60px;
+}
+
+/* Mirror spacing for Contact Info step content only */
+.contact-step.contact-info-step {
+  margin-right: 60px;
+}
+
 @media (max-width:900px){
   .steps { flex-wrap:wrap; gap:1.1rem 1.3rem; }
   .steps li { flex:1 1 45%; }
@@ -150,9 +161,11 @@
 @media (max-width:900px){ .platform-grid { grid-template-columns:repeat(2, 1fr); } }
 @media (max-width:640px){ .platform-grid { grid-template-columns:1fr; } }
 /* Stepper cards use the new card style */
-.platform-card { border:1px solid #e2e8f0; border-radius:12px; padding:.7rem .85rem .65rem; background:#fff; position:relative; display:flex; flex-direction:column; min-height:96px; box-shadow:0 2px 4px -2px rgba(0,0,0,0.06), 0 4px 12px -2px rgba(0,0,0,0.08); }
+.platform-card { border:1px solid #ff9c40; border-radius:12px; padding:.7rem .85rem .65rem; background:#fff; position:relative; display:flex; flex-direction:column; min-height:96px; box-shadow:0 2px 4px -2px rgba(0,0,0,0.06), 0 4px 12px -2px rgba(0,0,0,0.08); }
+.platform-card:hover { border-color:#ff7a00; box-shadow:0 2px 6px -2px rgba(0,0,0,0.08), 0 6px 14px -4px rgba(0,0,0,0.10); }
 .platform-card .top-row { display:flex; align-items:flex-start; gap:.55rem; }
 .platform-card .icon { width:28px; height:28px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.platform-card .icon svg { width: 28px; height: 28px; display: block; }
 .platform-card .meta { flex:1; }
 .platform-card .name { font-size:.6rem; font-weight:600; color:#222; line-height:1.1; }
 .platform-card .hint { font-size:.48rem; color:#777; margin-top:.15rem; white-space:nowrap; }
@@ -163,7 +176,7 @@
 .connect-btn { font-size:.48rem; background:#fff; border:1px solid #ff9c40; color:#ff7a00; padding:.35rem .65rem .32rem; border-radius:999px; display:inline-flex; align-items:center; gap:.3rem; cursor:pointer; font-weight:500; }
 .connect-btn .link-icon { stroke:#ff7a00; }
 .connect-btn:hover { background:#fff8f1; }
-.platform-card.connected { border-color:#ff7a00; }
+.platform-card.connected { border-color:#ff7a00; box-shadow:0 0 0 1px rgba(255,122,0,0.18), 0 2px 8px rgba(255,122,0,0.12); }
 .platform-card.connected .connect-btn { background:#ff7a00; color:#fff; }
 .platform-card.connected .connect-btn .link-icon { stroke:#fff; }
 .platform-card.connected .hint { color:#555; }
