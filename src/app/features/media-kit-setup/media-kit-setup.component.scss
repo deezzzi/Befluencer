@@ -351,8 +351,9 @@
 .area-contact { grid-area:contact; }
 /* Nudge Basic Info upward on desktop to visually close the gap under the top row */
 @media (min-width:1101px){
-  .preview-grid.design-layout .area-basic { margin-top:-190px; }
-  .preview-grid.design-layout .area-socials { margin-top:-50px; }
+  /* Removed negative margin to prevent overlap with Summary/Status card across different content heights */
+  .preview-grid.design-layout .area-basic { margin-top:0; }
+  .preview-grid.design-layout .area-socials { margin-top:15px; }
 }
 @media (max-width:1100px){
   .preview-grid.design-layout { grid-template-columns:repeat(2,1fr); grid-template-rows:auto; grid-template-areas:
@@ -378,6 +379,10 @@
 .preview-card .card-head { display:flex; align-items:center; justify-content:space-between; margin:0 0 .55rem; }
 .icon-btn { background:transparent; border:none; font-size:.55rem; cursor:pointer; color:#BA68C8; padding:.15rem .3rem; border-radius:4px; }
 .icon-btn:hover { background:#f5edf9; }
+.empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:.35rem; min-height:160px; color:#6b7280; padding:.75rem; }
+.empty-state .icon { opacity:.8; }
+.empty-state .title { font-weight:700; color:#222; font-size:.52rem; }
+.empty-state .desc { font-size:.46rem; color:#666; max-width:280px; }
 .summary-card { grid-column:span 1; height:auto; align-self:start; padding-bottom:.25rem; }
 .summary-inner { display:flex; align-items:center; height:auto; gap:1rem; padding-right:3.2rem; }
 .summary-inner .last-updated { display:flex; flex-direction:column; gap:.3rem; font-size:.46rem; }

@@ -342,132 +342,198 @@ import { NgFor, NgIf, NgClass, SlicePipe, DecimalPipe, NgTemplateOutlet } from '
             <div class="summary-inner">
               <div class="last-updated">
                 <div class="label">Last Updated</div>
-                <div class="time">12:00 PM | Apr,08</div>
+                <div class="time">{{ lastUpdatedStr || '—' }}</div>
               </div>
               <div class="divider-vert" aria-hidden="true"></div>
               <div class="status-section">
                 <div class="status-line">
                   <span class="status-icon" aria-hidden="true">
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5 5.2 9 9 3"/></svg>
+                    <svg *ngIf="allComplete; else inProg" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6.5 5.2 9 9 3"/></svg>
+                    <ng-template #inProg>
+                      <svg width="8" height="8" viewBox="0 0 8 8" fill="#fff" xmlns="http://www.w3.org/2000/svg"><circle cx="4" cy="4" r="4"/></svg>
+                    </ng-template>
                   </span>
-                  <span class="status-label">Status: <strong>Finished</strong></span>
+                  <span class="status-label">Status: <strong>{{ allComplete ? 'Finished' : 'In Progress' }}</strong></span>
                 </div>
-                <!-- <div class="progress-line">{{ steps.length }}/{{ steps.length }} Completed</div> -->
-                <div class="progress-line">7/7 Completed</div>
+                <div class="progress-line">{{ progressDone }}/{{ progressTotal }} Completed</div>
               </div>
-              <button type="button" class="edit-kit-btn" (click)="jump(0)">Edit Kit</button>
+              <button *ngIf="!allComplete; else editBtn" type="button" class="edit-kit-btn" (click)="continueToFirstIncomplete()">Continue</button>
+              <ng-template #editBtn>
+                <button type="button" class="edit-kit-btn" (click)="jump(0)">Edit Kit</button>
+              </ng-template>
             </div>
           </div>
 
           <!-- Previous Collaborations -->
           <div class="preview-card collabs-card area-collabs">
             <div class="card-head"><h3>Previous Collaborations</h3><a href="#" class="view-link" (click)="$event.preventDefault()">View all ▸</a></div>
-            <ul class="collab-list">
-              <li class="collab-item" *ngFor="let c of previewCollaborations | slice:0:3; let i = index">
-                <div class="logo-box" [ngClass]="'logo-'+i" aria-hidden="true"></div>
-                <div class="c-meta">
-                  <div class="reach" *ngIf="c.reach">{{ c.reach }}</div>
-                  <div class="title">{{ c.title }}</div>
+            <ng-container *ngIf="!isEmptyCollaborations(); else collabEmpty">
+              <ul class="collab-list">
+                <li class="collab-item" *ngFor="let c of previewCollaborations | slice:0:3; let i = index">
+                  <div class="logo-box" [ngClass]="'logo-'+i" aria-hidden="true"></div>
+                  <div class="c-meta">
+                    <div class="reach" *ngIf="c.reach">{{ c.reach }}</div>
+                    <div class="title">{{ c.title }}</div>
+                  </div>
+                </li>
+              </ul>
+            </ng-container>
+            <ng-template #collabEmpty>
+              <div class="empty-state">
+                <div class="icon" aria-hidden="true">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ABABAB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M7 7V4h10v3"/><path d="M7 14h4"/><path d="M7 11h7"/></svg>
                 </div>
-              </li>
-              <li class="collab-item empty" *ngIf="(previewCollaborations?.length||0)===0">No collaborations added.</li>
-            </ul>
+                <div class="title">No Previous Collaborations</div>
+                <div class="desc">You do not have any previous collaboration information yet. Proceed to add information.</div>
+              </div>
+            </ng-template>
           </div>
 
           <!-- Services & Rates -->
             <div class="preview-card services-card area-services">
             <div class="card-head"><h3>Services & Rates</h3><button type="button" class="icon-btn" (click)="jump(3)" aria-label="Edit Services & Rates"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5Z"/></svg></button></div>
-            <div class="services-rates">
-              <div class="svc-col">
-                <div class="col-head">Services</div>
-                <ul class="plain-list">
-                  <ng-container *ngFor="let s of servicesList">
-                    <li *ngIf="isServiceSelected(s.id)">{{ s.title }}</li>
-                  </ng-container>
-                  <li *ngIf="selectedServices.length===0" class="empty">—</li>
-                </ul>
+            <ng-container *ngIf="!isEmptyServicesRates(); else servicesEmpty">
+              <div class="services-rates">
+                <div class="svc-col">
+                  <div class="col-head">Services</div>
+                  <ul class="plain-list">
+                    <ng-container *ngFor="let s of servicesList">
+                      <li *ngIf="isServiceSelected(s.id)">{{ s.title }}</li>
+                    </ng-container>
+                    <li *ngIf="selectedServices.length===0" class="empty">—</li>
+                  </ul>
+                </div>
+                <div class="rate-col">
+                  <div class="col-head">Rates</div>
+                  <ul class="plain-list">
+                    <li *ngIf="ratesForm.value.chargingRate==='negotiable'">Negotiable</li>
+                    <li *ngIf="ratesForm.value.chargingRate!=='negotiable' && amountValue">{{ ratesForm.value.currency }} {{ amountValue | number:'1.2-2' }} {{ readableRate(ratesForm.value.chargingRate || null) }}</li>
+                    <li *ngIf="amountValue && ratesForm.value.chargingRate==='per_post'">{{ ratesForm.value.currency }} {{ (amountValue * 15) | number:'1.2-2' }} per package</li>
+                    <li *ngIf="amountValue && ratesForm.value.chargingRate==='per_package'">{{ ratesForm.value.currency }} {{ (amountValue / 15) | number:'1.2-2' }} per post</li>
+                    <li *ngIf="!amountValue && ratesForm.value.chargingRate!=='negotiable'" class="empty">—</li>
+                  </ul>
+                </div>
               </div>
-              <div class="rate-col">
-                <div class="col-head">Rates</div>
-                <ul class="plain-list">
-                  <li *ngIf="ratesForm.value.chargingRate==='negotiable'">Negotiable</li>
-                  <!-- If a concrete amount entered show primary rate -->
-                  <li *ngIf="ratesForm.value.chargingRate!=='negotiable' && amountValue">{{ ratesForm.value.currency }} {{ amountValue | number:'1.2-2' }} {{ readableRate(ratesForm.value.chargingRate || null) }}</li>
-                  <!-- Provide a derived secondary rate example when user supplied amount (mirrors design having two lines) -->
-                  <li *ngIf="amountValue && ratesForm.value.chargingRate==='per_post'">{{ ratesForm.value.currency }} {{ (amountValue * 15) | number:'1.2-2' }} per package</li>
-                  <li *ngIf="amountValue && ratesForm.value.chargingRate==='per_package'">{{ ratesForm.value.currency }} {{ (amountValue / 15) | number:'1.2-2' }} per post</li>
-                  <li *ngIf="!amountValue && ratesForm.value.chargingRate!=='negotiable'" class="empty">—</li>
-                </ul>
+            </ng-container>
+            <ng-template #servicesEmpty>
+              <div class="empty-state">
+                <div class="icon" aria-hidden="true">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ABABAB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Z"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><path d="M8 13h8M8 17h6"/></svg>
+                </div>
+                <div class="title">No Services or Rates Added</div>
+                <div class="desc">Your Services will be displayed here. Proceed to add.</div>
               </div>
-            </div>
+            </ng-template>
           </div>
 
           <!-- Basic Info -->
           <div class="preview-card basic-card area-basic">
             <div class="card-head"><h3>Basic Info</h3><button type="button" class="icon-btn" (click)="jump(0)" aria-label="Edit Basic Info"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5Z"/></svg></button></div>
-            <div class="profile-line">
-              <div class="avatar small" aria-hidden="true">JD</div>
-              <div class="person"><div class="name">{{ form.value.firstName }} {{ form.value.lastName }}</div><div class="role">Creator</div></div>
-            </div>
-            <div class="bio-label" *ngIf="form.value.bio">Bio</div>
-            <div class="bio" *ngIf="form.value.bio">{{ form.value.bio }}</div>
-            <dl class="kv">
-              <div><dt>Location</dt><dd>{{ form.value.location || '—' }}</dd></div>
-              <div><dt>Content Niche (s)</dt><dd>Tech Review</dd></div>
-              <div><dt>Languages (s)</dt><dd>{{ form.value.languages || 'English' }}</dd></div>
-              <div><dt>Stage Name</dt><dd>{{ form.value.alias || '—' }}</dd></div>
-            </dl>
+            <ng-container *ngIf="!isEmptyBasicInfo(); else basicEmpty">
+              <div class="profile-line">
+                <div class="avatar small" aria-hidden="true">JD</div>
+                <div class="person"><div class="name">{{ form.value.firstName }} {{ form.value.lastName }}</div><div class="role">Creator</div></div>
+              </div>
+              <div class="bio-label" *ngIf="form.value.bio">Bio</div>
+              <div class="bio" *ngIf="form.value.bio">{{ form.value.bio }}</div>
+              <dl class="kv">
+                <div><dt>Location</dt><dd>{{ form.value.location || '—' }}</dd></div>
+                <div><dt>Content Niche (s)</dt><dd>Tech Review</dd></div>
+                <div><dt>Languages (s)</dt><dd>{{ form.value.languages || 'English' }}</dd></div>
+                <div><dt>Stage Name</dt><dd>{{ form.value.alias || '—' }}</dd></div>
+              </dl>
+            </ng-container>
+            <ng-template #basicEmpty>
+              <div class="empty-state">
+                <div class="icon" aria-hidden="true">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ABABAB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M4 20c1.4-3.2 4.3-5 8-5s6.6 1.8 8 5"/></svg>
+                </div>
+                <div class="title">No Basic Information</div>
+                <div class="desc">You do not have any basic information yet. Proceed to add your information.</div>
+              </div>
+            </ng-template>
           </div>
 
           <!-- Contact Information -->
           <div class="preview-card contact-card area-contact">
             <div class="card-head"><h3>Contact Information</h3><button type="button" class="icon-btn" (click)="jump(4)" aria-label="Edit Contact Info"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5Z"/></svg></button></div>
-            <dl class="kv tight">
-              <div><dt>Email Address</dt><dd>{{ contactForm.value.email || '—' }}</dd></div>
-              <div><dt>Phone Number (s)</dt><dd>{{ contactForm.value.phone || '—' }}</dd></div>
-              <div><dt>Website/Booking site</dt><dd>
-                <ng-container *ngIf="contactForm.value.website; else noSite">
-                  <a class="site-link" href="{{ formatWebsite(contactForm.value.website) }}" target="_blank" rel="noopener">{{ contactForm.value.website }}</a>
-                </ng-container>
-                <ng-template #noSite>—</ng-template>
-              </dd></div>
-              <div><dt>Booking Availability</dt><dd>{{ contactForm.value.bookingAvailability || '—' }}</dd></div>
-              <div><dt>Preferred Contact Method</dt><dd>{{ preferredContactDisplay() || '—' }}</dd></div>
-              <div *ngIf="contactForm.value.whatsapp"><dt>WhatsApp Contact</dt><dd>{{ contactForm.value.whatsapp }}</dd></div>
-              <div><dt>Additional Notes</dt><dd>{{ contactForm.value.notes || '—' }}</dd></div>
-            </dl>
+            <ng-container *ngIf="!isEmptyContact(); else contactEmpty">
+              <dl class="kv tight">
+                <div><dt>Email Address</dt><dd>{{ contactForm.value.email || '—' }}</dd></div>
+                <div><dt>Phone Number (s)</dt><dd>{{ contactForm.value.phone || '—' }}</dd></div>
+                <div><dt>Website/Booking site</dt><dd>
+                  <ng-container *ngIf="contactForm.value.website; else noSite">
+                    <a class="site-link" href="{{ formatWebsite(contactForm.value.website) }}" target="_blank" rel="noopener">{{ contactForm.value.website }}</a>
+                  </ng-container>
+                  <ng-template #noSite>—</ng-template>
+                </dd></div>
+                <div><dt>Booking Availability</dt><dd>{{ contactForm.value.bookingAvailability || '—' }}</dd></div>
+                <div><dt>Preferred Contact Method</dt><dd>{{ preferredContactDisplay() || '—' }}</dd></div>
+                <div *ngIf="contactForm.value.whatsapp"><dt>WhatsApp Contact</dt><dd>{{ contactForm.value.whatsapp }}</dd></div>
+                <div><dt>Additional Notes</dt><dd>{{ contactForm.value.notes || '—' }}</dd></div>
+              </dl>
+            </ng-container>
+            <ng-template #contactEmpty>
+              <div class="empty-state">
+                <div class="icon" aria-hidden="true">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ABABAB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="3"/><path d="M3 8h18"/><circle cx="8" cy="12" r="2"/><path d="M12 16h6"/></svg>
+                </div>
+                <div class="title">No Contact Information Added</div>
+                <div class="desc">You do not have any contact information to show here. Kindly proceed to add your contacts.</div>
+              </div>
+            </ng-template>
           </div>
 
           <!-- Socials & Stat -->
           <div class="preview-card socials-card area-socials">
             <div class="card-head"><h3>Socials & Stat</h3><button type="button" class="icon-btn" (click)="jump(1)" aria-label="Edit Socials"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5Z"/></svg></button></div>
-            <ul class="platform-stats alt">
-              <li *ngFor="let p of platforms | slice:0:8" [class.connected]="p.connected">
-                <span class="icon" [innerHTML]="p.icon" aria-hidden="true"></span>
-                <div class="info">
-                  <div class="top-line">
-                    <span class="pname">{{ p.name }}</span>
-                    <span class="ext" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="m15 3 6 6M21 3h-6v6"/></svg></span>
+            <ng-container *ngIf="!isEmptySocials(); else socialsEmpty">
+              <ul class="platform-stats alt">
+                <li *ngFor="let p of platforms | slice:0:8" [class.connected]="p.connected">
+                  <span class="icon" [innerHTML]="p.icon" aria-hidden="true"></span>
+                  <div class="info">
+                    <div class="top-line">
+                      <span class="pname">{{ p.name }}</span>
+                      <span class="ext" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="m15 3 6 6M21 3h-6v6"/></svg></span>
+                    </div>
+                    <div class="metric" *ngIf="p.connected; else dash">{{ platformMetrics[p.id] || '—' }}</div>
+                    <ng-template #dash><div class="metric empty">—</div></ng-template>
                   </div>
-                  <div class="metric" *ngIf="p.connected; else dash">{{ platformMetrics[p.id] || '—' }}</div>
-                  <ng-template #dash><div class="metric empty">—</div></ng-template>
+                </li>
+              </ul>
+            </ng-container>
+            <ng-template #socialsEmpty>
+              <div class="empty-state">
+                <div class="icon" aria-hidden="true">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ABABAB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M7 12h10"/><path d="M7 8h6"/></svg>
                 </div>
-              </li>
-            </ul>
+                <div class="title">No Socials Linked</div>
+                <div class="desc">Proceed to link your social media account.</div>
+              </div>
+            </ng-template>
           </div>
 
           <!-- Top Content -->
           <div class="preview-card content-card area-topcontent">
             <div class="card-head"><h3>Top Content</h3><a href="#" class="view-link" (click)="$event.preventDefault()">View all ▸</a></div>
-            <div class="top-content-grid precise">
-              <!-- First row: 3 thumbs -->
-              <ng-container *ngFor="let c of topContents | slice:0:3; let i=index">
-                <div class="content-thumb" [ngClass]="'c-'+i"></div>
-              </ng-container>
-              <!-- Second row: next single thumb in column 1 -->
-              <div class="content-thumb second-row" *ngIf="topContents.length>3" [ngClass]="'c-3'"></div>
-              <div class="add-contents" (click)="addContent()">+ Add Contents</div>
-            </div>
+            <ng-container *ngIf="!isEmptyTopContent(); else topEmpty">
+              <div class="top-content-grid precise">
+                <ng-container *ngFor="let c of topContents | slice:0:3; let i=index">
+                  <div class="content-thumb" [ngClass]="'c-'+i"></div>
+                </ng-container>
+                <div class="content-thumb second-row" *ngIf="topContents.length>3" [ngClass]="'c-3'"></div>
+                <div class="add-contents" (click)="addContent()">+ Add Contents</div>
+              </div>
+            </ng-container>
+            <ng-template #topEmpty>
+              <div class="empty-state">
+                <div class="icon" aria-hidden="true">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ABABAB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 15l4-4 3 3 4-4 4 4"/></svg>
+                </div>
+                <div class="title">No Contents Uploaded</div>
+                <div class="desc">You do not have any contents to show here. Kindly proceed to add some videos.</div>
+              </div>
+            </ng-template>
           </div>
         </div>
       </ng-template>
@@ -548,13 +614,9 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
     snapchat:'9.7k'
   };
   // Top content placeholder items (would contain thumbnail URLs in future)
-  topContents: { id:number }[] = [ {id:1},{id:2},{id:3},{id:4},{id:5} ];
+  topContents: { id:number }[] = [];
   // Placeholder previous collaborations list (would be aggregated from multiple form submissions later)
-  previewCollaborations: { title: string; reach: string }[] = [
-    { title:'MTN Ghana Router Review', reach:'12k Audiences Reached' },
-    { title:'Samsung S25 Unbox', reach:'1k Audiences Reached' },
-    { title:'Maxbeat Interview', reach:'7k Audiences Reached' }
-  ];
+  previewCollaborations: { title: string; reach: string }[] = [];
   collabForm = new FormBuilder().group({
     brand: ['', Validators.required],
     campaignName: ['', Validators.required],
@@ -605,6 +667,9 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
   openSocialsAccount = false;
   openPreferredContact = false;
   private destroy$ = new Subject<void>();
+  // Progress / last updated
+  progressTotal = 7;
+  lastUpdatedStr: string | null = null;
 
   ngOnInit(){
     this.emitTitle();
@@ -672,6 +737,9 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
   }
   saveDraft(){ this.saveDraftInternal(true); }
   private saveDraftInternal(explicit: boolean){
+    // update last updated (not persisted – session level)
+    const now = new Date();
+    this.lastUpdatedStr = this.formatTimestamp(now);
     const snapshot = this.state.snapshot({
       activeStep: this.activeStep,
       form: this.form,
@@ -720,7 +788,14 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
     this.openSocialsAccount = false;
     this.openPreferredContact = false;
   }
-  openPreview(e: Event){ e.preventDefault(); /* TODO: open preview modal/pane */ }
+  openPreview(e: Event){
+    e.preventDefault();
+    this.activeStep = this.steps.length - 1;
+    this.submitted = false;
+    this.closeAllDropdowns();
+    this.emitTitle();
+    this.saveDraftInternal(false);
+  }
   toggleAudience(){ this.openAudience = !this.openAudience; this.openLanguages = false; }
   toggleLanguages(){ this.openLanguages = !this.openLanguages; this.openAudience = false; }
   selectAudience(val: string){ this.form.patchValue({ audienceBase: val }); this.openAudience = false; }
@@ -788,5 +863,66 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
   addContent(){
     const nextId = this.topContents.length + 1;
     this.topContents.push({ id: nextId });
+  }
+  // ---------- Empty-state helpers & progress ----------
+  private hasText(v: any){ return !!(v && String(v).trim().length); }
+  isEmptyBasicInfo(){
+    const v = this.form.value;
+    return !(
+      this.hasText(v.firstName) || this.hasText(v.lastName) || this.hasText(v.location) || this.hasText(v.bio) || this.hasText(v.languages) || this.hasText(v.audienceBase) || this.hasText(v.alias)
+    );
+  }
+  isEmptySocials(){ return !this.platforms.some(p => p.connected); }
+  isEmptyCollaborations(){
+    const v = this.collabForm.value;
+    const anyForm = this.hasText(v.brand) || this.hasText(v.campaignName) || this.hasText(v.campaignDescription) || this.hasText(v.campaignReach) || this.hasText(v.campaignEngagement);
+    return !(anyForm || this.brandLogoPreview || (this.previewCollaborations && this.previewCollaborations.length>0));
+  }
+  isEmptyServicesRates(){
+    const rate = this.ratesForm.value.chargingRate;
+    const amountOk = this.amountValue > 0;
+    const anyService = this.selectedServices.length > 0;
+    const anyRate = rate === 'negotiable' || amountOk;
+    return !(anyService || anyRate);
+  }
+  isEmptyContact(){
+    const v = this.contactForm.value;
+    return !(this.hasText(v.email) || this.hasText(v.phone) || this.hasText(v.bookingAvailability) || this.hasText(v.website) || this.hasText(v.preferredMethod) || this.hasText(v.whatsapp) || this.hasText(v.notes));
+  }
+  isEmptyTopContent(){ return !(this.topContents && this.topContents.length > 0); }
+  get progressDone(){
+    let done = 0;
+    if(!this.isEmptyBasicInfo()) done++;
+    if(!this.isEmptySocials()) done++;
+    if(!this.isEmptyCollaborations()) done++;
+    if(!this.isEmptyServicesRates()) done++;
+    if(!this.isEmptyContact()) done++;
+    if(!this.isEmptyTopContent()) done++;
+    // Seventh item: use rates amount OR selected services as another completion signal if not already counted; fallback to preview reached
+    const extra = (this.selectedServices.length>0 || this.amountValue>0 || this.brandLogoPreview);
+    if(extra) done++;
+    return done;
+  }
+  get allComplete(){ return this.progressDone >= this.progressTotal; }
+  private firstIncompleteStep(): number {
+    // Map to step indices: 0 Basic, 1 Socials, 2 Collab, 3 Rates, 4 Contact
+    if(this.isEmptyBasicInfo()) return 0;
+    if(this.isEmptySocials()) return 1;
+    if(this.isEmptyCollaborations()) return 2;
+    if(this.isEmptyServicesRates()) return 3;
+    if(this.isEmptyContact()) return 4;
+    return 0;
+  }
+  continueToFirstIncomplete(){ this.activeStep = this.firstIncompleteStep(); this.emitTitle(); }
+  private formatTimestamp(d: Date){
+    try{
+      const opts: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: '2-digit' };
+      const time = new Intl.DateTimeFormat(undefined, opts).format(d);
+      const month = d.toLocaleString(undefined, { month: 'short' });
+      const day = d.getDate().toString().padStart(2,'0');
+      return `${time} | ${month},${day}`;
+    }catch{
+      return d.toLocaleString();
+    }
   }
 }
