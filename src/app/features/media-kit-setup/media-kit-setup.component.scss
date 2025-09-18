@@ -70,6 +70,10 @@
 }
 /* Container & Card */
 .mk-setup-wrapper { padding: 1.8rem 1.6rem 3rem; display:flex; justify-content:center; }
+.mk-setup-wrapper { box-sizing: border-box; }
+@media (max-width: 480px){
+  .mk-setup-wrapper { padding: 1rem .8rem 2rem; }
+}
 /* Main stepper container uses the new dashboard-like card style and Figma dimensions */
 .wizard-card {
   width:100%;
@@ -83,6 +87,9 @@
   position:relative;
   display:flex; flex-direction:column; /* unify header/content/footer inside one card */
   box-shadow:0 2px 4px -2px rgba(0,0,0,0.06), 0 4px 12px -2px rgba(0,0,0,0.08);
+}
+@media (max-width: 480px){
+  .wizard-card { padding: .9rem .9rem 1.2rem; border-radius:12px; }
 }
 /* On preview step, expand and make wrapper transparent to mirror saved page */
 .mk-setup-wrapper.preview-mode .wizard-card { max-width:1512px; background:transparent; border:none; padding:0; }
@@ -120,6 +127,13 @@
 .steps li:nth-child(3) .connector-space { width:calc(var(--after-connector-gap) + var(--circle-buffer) + 3px); flex-basis:calc(var(--after-connector-gap) + var(--circle-buffer) + 3px); }
 /* If further adjustment needed, increase the + 3px above by 1px increments. */
 
+/* Small screens: make stepper horizontally scrollable for better usability */
+@media (max-width: 480px){
+  .steps { overflow-x:auto; white-space:nowrap; padding-bottom:.25rem; }
+  .steps li { flex: 0 0 auto; min-width: 200px; }
+  .steps .desc { width: 160px; max-width:160px; }
+}
+
 /* Section heading with rule */
 .section-bar { --rule-max:260px; display:flex; align-items:center; margin:.18rem 0 .75rem; position:relative; }
 .section-title { font-size:.75rem; font-weight:600; color:#ff7a00; margin:0 .55rem 0 0; white-space:nowrap; line-height:1.1; }
@@ -142,6 +156,10 @@
 .avatar { width:38px; height:38px; border:1px solid #d6d6d6; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#fff; }
 .id-block .name { font-size:.6rem; font-weight:600; color:#222; }
 .id-block .role { font-size:.48rem; color:#666; margin-top:.15rem; }
+@media (max-width:480px){
+  .profile-intro { gap:.6rem; }
+  .id-block .name { font-size:.58rem; }
+}
 
 /* Form grid & vertical divider */
 .form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:2.2rem; row-gap:.95rem; position:relative; }
@@ -182,6 +200,10 @@
 .actions .next { background:#ff7a00; color:#fff; }
 .actions .next:hover { background:#ff8e26; }
 .actions .next:active { background:#f37000; }
+@media (max-width:480px){
+  .actions { gap:.6rem; }
+  .actions button { padding:.5rem .75rem .45rem; }
+}
 
 /* Placeholders */
 .placeholder-step { padding:2.5rem 0 1rem; text-align:center; }
@@ -223,6 +245,10 @@
   .form-grid:before { display:none; }
   .field.span-2 { grid-column:auto; }
 }
+@media (max-width:480px){
+  .field input, .field textarea { font-size:.58rem; }
+  .dropdown-panel { font-size:.58rem; }
+}
 
 /* Socials & Stats */
 .socials-step { padding:1rem 0 0; }
@@ -230,6 +256,11 @@
 @media (max-width:1200px){ .platform-grid { grid-template-columns:repeat(3, 1fr); } }
 @media (max-width:900px){ .platform-grid { grid-template-columns:repeat(2, 1fr); } }
 @media (max-width:640px){ .platform-grid { grid-template-columns:1fr; } }
+@media (max-width:480px){
+  .platform-card { padding:.6rem .7rem .55rem; }
+  .platform-card .name { font-size:.58rem; }
+  .connect-btn { padding:.32rem .6rem .29rem; }
+}
 /* Stepper cards use the new card style */
 .platform-card { border:1px solid #ff9c40; border-radius:12px; padding:.7rem .85rem .65rem; background:#fff; position:relative; display:flex; flex-direction:column; min-height:96px; box-shadow:0 2px 4px -2px rgba(0,0,0,0.06), 0 4px 12px -2px rgba(0,0,0,0.08); }
 .platform-card:hover { border-color:#ff7a00; box-shadow:0 2px 6px -2px rgba(0,0,0,0.08), 0 6px 14px -4px rgba(0,0,0,0.10); }
@@ -277,6 +308,10 @@
   .brand-column { flex-direction:row; flex-wrap:wrap; gap:1.4rem; }
   .brand-upload { max-width:180px; }
   .brand-select-wrapper { flex:1 1 200px; }
+}
+@media (max-width:480px){
+  .brand-upload { max-width:140px; }
+  .collab-grid { gap:1.2rem; }
 }
 
 /* Rates & Services */
@@ -329,6 +364,9 @@
   .rates-right { padding-left:0; }
   .services-grid { grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); }
 }
+@media (max-width:480px){
+  .service-card { min-height:150px; padding:.9rem .9rem .8rem; }
+}
 
 /* Preview Step */
 .preview-header { margin:0 0 1.2rem; }
@@ -367,6 +405,15 @@
 @media (max-width:700px){
   .preview-grid.design-layout { grid-template-columns:1fr; grid-template-rows:auto; grid-template-areas:
     "summary" "basic" "socials" "collabs" "topcontent" "services" "contact"; }
+}
+@media (max-width:480px){
+  .preview-grid { grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); column-gap:10px; row-gap:10px; }
+  .preview-card { padding:.8rem; }
+  .preview-card h3 { font-size:.56rem; }
+  .empty-state { min-height:140px; }
+  .summary-inner { flex-direction:column; align-items:flex-start; gap:.6rem; padding-right:0; }
+  .summary-inner .divider-vert { display:none; }
+  .edit-kit-btn { position:static; transform:none; margin-top:.4rem; }
 }
 .preview-card {
   /* Match dashboard card look */
@@ -468,6 +515,11 @@
   .preview-grid { grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); }
   .two-col { grid-template-columns:1fr; }
   .kv { grid-template-columns:1fr; }
+}
+@media (max-width:480px){
+  .top-content-grid.precise { grid-template-columns:repeat(3, 48px); }
+  .content-thumb { width:48px; height:48px; }
+  .add-contents { grid-column:1 / -1; justify-self:start; }
 }
 
 /* Saved Preview Modal */

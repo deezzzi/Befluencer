@@ -387,7 +387,7 @@ import { NgFor, NgIf, NgClass, SlicePipe, DecimalPipe, NgTemplateOutlet } from '
 </svg>
                 </div>
                 <div class="title">No Previous Collaborations</div>
-                <div class="desc">You do not have any previous collaboration information yet. Proceed to add information.</div>
+                <div class="desc">You do not have any previous collaboration information yet.<br> Proceed to add information.</div>
               </div>
             </ng-template>
           </div>
@@ -458,7 +458,7 @@ import { NgFor, NgIf, NgClass, SlicePipe, DecimalPipe, NgTemplateOutlet } from '
 </svg>
                 </div>
                 <div class="title">No Basic Information</div>
-                <div class="desc">You do not have any basic information yet. Proceed to add your information.</div>
+                <div class="desc">You do not have any basic information yet. <br> Proceed to add your information.</div>
               </div>
             </ng-template>
           </div>
@@ -491,7 +491,7 @@ import { NgFor, NgIf, NgClass, SlicePipe, DecimalPipe, NgTemplateOutlet } from '
 </svg>
                 </div>
                 <div class="title">No Contact Information Added</div>
-                <div class="desc">You do not have any contact information to show here. Kindly proceed to add your contacts.</div>
+                <div class="desc">You do not have any contact information to show here.<br> Kindly proceed to add your contacts.</div>
               </div>
             </ng-template>
           </div>
@@ -553,7 +553,7 @@ import { NgFor, NgIf, NgClass, SlicePipe, DecimalPipe, NgTemplateOutlet } from '
 </svg>
                 </div>
                 <div class="title">No Contents Uploaded</div>
-                <div class="desc">You do not have any contents to show here. Kindly proceed to add some videos.</div>
+                <div class="desc">You do not have any contents to show here.<br> Kindly proceed to add some videos.</div>
               </div>
             </ng-template>
           </div>
