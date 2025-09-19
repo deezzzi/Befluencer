@@ -4,6 +4,7 @@
 
 html, body {
   height: 100%;
+  margin: 0; /* prevent default 8px margin causing phantom scrollbars */
   font-family: "Inter", system-ui, sans-serif;
   background: #f8f9fb;
   color: #1c1b21; /* approx gray-900 */
@@ -23,6 +24,7 @@ body.dark {
   border-radius: inherit;
   background: var(--color-gradient-horizontal);
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
 }

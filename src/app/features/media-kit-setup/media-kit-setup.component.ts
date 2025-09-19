@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
@@ -170,7 +170,7 @@ import { NgFor, NgIf, NgClass, SlicePipe, DecimalPipe, NgTemplateOutlet } from '
               </ng-container>
               <ng-template #logoPrev>
                 <img [src]="brandLogoPreview" alt="Brand logo preview" class="logo-preview"/>
-                <button type="button" class="change-logo-btn">Change Logo</button>
+                <button type="button" class="change-logo-btn" (click)="triggerBrandFile()">Change Logo</button>
               </ng-template>
               <input #brandFile type="file" accept="image/*" (change)="onBrandLogoSelected($event)" hidden />
             </div>
@@ -649,7 +649,7 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
   brandList = ['Nike','Adidas','Coca-Cola','Apple','Samsung','Netflix'];
   openBrands = false;
   brandLogoPreview: string | null = null;
-  private _brandFileEl?: HTMLInputElement;
+  @ViewChild('brandFile') private brandFileInput?: ElementRef<HTMLInputElement>;
   servicesList = [
     { id:'sponsored', title:'Sponsored Posts', desc:'Promote a brand or product directly on your social media page as a paid post, tailored to your audience.' },
     { id:'reviews', title:'Product Reviews', desc:'Share your honest opinion about a product after using it — through a dedicated post, video, or story.' },
@@ -830,15 +830,25 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
   editPlatform(p: any){ /* TODO: open edit modal */ }
   toggleBrands(){ this.openBrands = !this.openBrands; }
   selectBrand(b: string){ this.collabForm.patchValue({ brand: b }); this.openBrands = false; }
-  triggerBrandFile(){ if(this._brandFileEl){ this._brandFileEl.click(); } }
+  triggerBrandFile(){
+    const el = this.brandFileInput?.nativeElement;
+    if(el){
+      el.click();
+    }
+  }
   onBrandLogoSelected(e: Event){
     const input = e.target as HTMLInputElement;
-    this._brandFileEl = input;
     if(input.files && input.files[0]){
       const file = input.files[0];
+      // Basic validation: allow images only and limit to ~5MB
+      if(!file.type.startsWith('image/')){ return; }
+      const maxBytes = 5 * 1024 * 1024;
+      if(file.size > maxBytes){ return; }
       const reader = new FileReader();
       reader.onload = (ev)=>{ this.brandLogoPreview = ev.target?.result as string; };
       reader.readAsDataURL(file);
+      // Allow selecting the same file again later by resetting the input value
+      input.value = '';
     }
   }
   isServiceSelected(id: string){ return this.selectedServices.includes(id); }

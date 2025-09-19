@@ -1,0 +1,228 @@
+.signup-shell { display:grid; grid-template-columns:1.1fr .9fr; min-height:100dvh; height:auto; background:#fff; overflow-x:hidden; }
+.left { display:flex; align-items:center; justify-content:center; padding:2rem; }
+.left.purple { background:#f0e9fb; }
+.right { position:relative; display:flex; flex-direction:column; padding:0 2rem 1.45rem; border-left:1px solid #e9e9e9; }
+.topbar { width:100%; display:flex; align-items:center; justify-content:space-between; min-height:36px; }
+.back-link { color:#777; text-decoration:none; font-size:.95rem; }
+.back-link:hover { text-decoration:underline; }
+.mini-logo { display:flex; align-items:center; gap:.4rem; font-weight:800; color:#111; }
+.mini-logo .b { display:inline-block; width:20px; height:20px; border-radius:6px; background:linear-gradient(135deg,#FF6A00,#9C27B0); color:#fff; font-size:14px; line-height:20px; text-align:center; font-weight:900; }
+
+.brand { max-width:720px; width:100%; padding-left:6vw; }
+.logo { display:flex; align-items:center; gap:1.25rem; font-weight:800; letter-spacing:.2px; }
+.logo .b { display:inline-block; width:112px; height:112px; border-radius:28px; background:linear-gradient(135deg,#FF6A00,#9C27B0); color:#fff; font-size:74px; line-height:112px; text-align:center; font-weight:900; filter: drop-shadow(0 6px 20px rgba(128,0,128,.15)); }
+.logo .word { font-size:72px; color:#111; font-weight:800; }
+.tagline { margin-top:.4rem; font-size:28px; color:#444; font-weight:600; padding-left:calc(112px + 1.25rem); }
+
+.form-wrap {
+  width:543px;
+  height:auto; /* default: no forced height to avoid scroll on smaller screens */
+  padding:31px 35px 35px; /* nudge title up by ~4px */
+  border-radius:15px;
+  box-sizing:border-box;
+  margin:0 auto 0;
+  /* Spacing tokens to match screenshot precisely */
+  --gap-login-to-first: 10px;
+  --gap-field-to-field: 10px;
+  --gap-field-internal: 4px; /* label/input/hint spacing within a field */
+  --gap-input-to-hint: 10px; /* exact spacing from input to password hint */
+  --gap-hint-to-terms: 10px;
+  --gap-terms-to-captcha: 10px;
+  --gap-captcha-to-cta: 12px;
+  --gap-cta-to-divider: 16px;
+  --gap-divider-to-socials: 12px;
+}
+.form-wrap .title,
+.form-wrap .login,
+.form-wrap form,
+.form-wrap .captcha,
+.form-wrap .cta,
+.form-wrap .divider,
+.form-wrap .socials { width:473px; max-width:100%; }
+.title {
+  margin:0 0 .25rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight:500;
+  font-style: normal; /* Figma 'Medium' corresponds to weight 500 */
+  font-size:32px;
+  line-height:100%;
+  letter-spacing:0;
+  vertical-align:middle;
+  color:#111;
+}
+.login { color:#555; margin-bottom:var(--gap-login-to-first); }
+.login a { color:#6b2acb; text-decoration:none; font-weight:600; }
+.login a:hover { text-decoration:underline; }
+
+form { display:flex; flex-direction:column; gap:0; }
+.field {
+  display:flex;
+  flex-direction:column;
+  gap:var(--gap-field-internal); /* internal spacing between label/input/hints */
+  width:473px; /* Figma width */
+  max-width:100%;
+  height:87px; /* Figma field block height */
+  opacity:1; /* Figma opacity */
+}
+.field + .field { margin-top:var(--gap-field-to-field); }
+.field span { font-size:.9rem; color:#333; }
+.field input {
+  width:473px;
+  max-width:100%;
+  box-sizing:border-box; /* include 1px borders within the 473px width */
+  padding:.7rem .85rem;
+  border:1px solid #dcdcdc;
+  border-radius:12px;
+  outline:none;
+  font-size:.95rem;
+  height:52px;
+}
+.field input:focus { border-color:#b69adf; box-shadow:0 0 0 3px rgba(155,106,212,.15); }
+.password { position:relative; }
+.password input { padding-right:84px; } /* reserve space for eye + Hide/Show label */
+.password .toggle { position:absolute; right:.6rem; top:50%; transform:translateY(-50%); border:none; background:transparent; color:#777; cursor:pointer; font-size:.9rem; display:flex; align-items:center; gap:.35rem; }
+.password .toggle svg { display:block; }
+.hint { color:#777; font-size:.8rem; margin-top:0; }
+.password .hint { margin-top: calc(var(--gap-input-to-hint) - var(--gap-field-internal)); }
+.err { color:#d14343; font-size:.8rem; margin-top:0; }
+
+.terms { color:#666; font-size:.85rem; line-height:1.5; margin:50px 0 }
+.terms a { color:#6b2acb; text-decoration:none; }
+.terms a:hover { text-decoration:underline; }
+
+.captcha { display:flex; align-items:center; justify-content:space-between; border:1px solid #cfcfcf; border-radius:12px; padding:.5rem .75rem; margin:var(--gap-terms-to-captcha) 0 var(--gap-captcha-to-cta); min-height:50px; }
+.captcha .check { display:flex; align-items:center; gap:.5rem; color:#444; }
+.captcha .badge { color:#777; font-size:.8rem; }
+
+.cta { width:100%; height:46px; border-radius:999px; border:2px solid #ff7a00; background:#ff7a00; color:#fff; font-weight:700; cursor:pointer; margin-top:0; transition:filter .18s ease, box-shadow .18s ease; }
+.cta:hover { filter:brightness(.95); box-shadow:0 10px 18px -8px rgba(255,122,0,.5); }
+.divider { display:flex; align-items:center; gap:.6rem; color:#9a9a9a; margin:var(--gap-cta-to-divider) 0; }
+.divider::before, .divider::after { content:""; flex:1; height:1px; background:#e6e6e6; }
+.divider span { font-weight:700; letter-spacing:.1em; font-size:.85rem; }
+
+.socials { display:flex; align-items:center; justify-content:center; gap:.7rem; margin-top:var(--gap-divider-to-socials); }
+.social { width:36px; height:36px; border-radius:50%; border:1px solid #dcdcdc; background:#fff; cursor:pointer; font-weight:700; display:inline-flex; align-items:center; justify-content:center; }
+.social.facebook { background:#1877F2; border-color:#1877F2; color:#fff; }
+.social.apple { background:#000; border-color:#000; color:#fff; font-size:18px; }
+.social.google { color:#4285F4; }
+
+@media (max-width: 900px){
+  .signup-shell { grid-template-columns:1fr; }
+  .left { order:2; padding:1.25rem; }
+  .right { order:1; padding:1rem 1.25rem 1.75rem; }
+  .brand { padding-left:0; }
+  .logo .word { font-size:46px; }
+  .logo .b { width:74px; height:74px; font-size:46px; line-height:74px; border-radius:20px; }
+  .tagline { font-size:18px; padding-left:calc(74px + 1rem); }
+  /* Responsive override: keep form container fluid on smaller screens */
+  .form-wrap { width:100%; height:auto; padding:20px; border-radius:12px; }
+  form { gap:0; }
+  .field { width:100%; height:auto; }
+  .form-wrap .title,
+  .form-wrap .login,
+  .form-wrap form,
+  .form-wrap .captcha,
+  .form-wrap .cta,
+  .form-wrap .divider,
+  .form-wrap .socials { width:100%; }
+}
+
+/* Figma exact desktop layout: total width 1923px, signup (right) column 820px, height 1080px */
+@media (min-width: 1800px){
+  .signup-shell {
+    width:min(1923px, 100%);
+    max-width:1923px;
+    margin:0 auto;
+    grid-template-columns:calc(100% - 820px) 820px;
+    /* Use min-height to flex with dynamic viewport units and avoid phantom scrollbars */
+    min-height:100dvh;
+    height:auto;
+  }
+  .right { width:820px; }
+  /* Keep form-wrap auto height so page doesn't force scroll when content fits */
+  .form-wrap { height:auto; }
+  form { gap:0; }
+}
+
+/* Compact desktop heights: ensure the entire form (including socials) fits without scrolling */
+@media (max-height: 900px) and (min-width: 901px){
+  .right { padding-top:.9rem; padding-bottom:1rem; }
+  .form-wrap { margin-top:-.5rem; height:auto; 
+    /* tighten vertical rhythm on compact heights */
+    --gap-hint-to-terms: 10px;
+    --gap-terms-to-captcha: 8px;
+    --gap-captcha-to-cta: 10px;
+    --gap-cta-to-divider: 10px;
+    --gap-divider-to-socials: 10px;
+    --gap-input-to-hint: 8px;
+  }
+  .title { margin:0 0 .25rem; }
+  .login { margin-bottom:var(--gap-login-to-first); }
+  form { gap:0; }
+  .field { height:78px; gap:var(--gap-field-internal); }
+  .field input { height:48px; min-height:48px; padding:.6rem .85rem; }
+  .captcha { min-height:48px; padding:.45rem .65rem; margin:var(--gap-terms-to-captcha) 0 var(--gap-captcha-to-cta); }
+  .cta { height:44px; margin-top:0; }
+  .divider { margin:var(--gap-cta-to-divider) 0; }
+  .socials { gap:.7rem; }
+}
+
+@media (max-height: 850px) and (min-width: 901px){
+  .right { padding-top:1rem; padding-bottom:1.1rem; }
+  .form-wrap { margin-top:-1rem; height:auto; padding-top:28px;
+    --gap-hint-to-terms: 10px; /* keep exact 10px between hint and terms */
+    --gap-terms-to-captcha: 7px;
+    --gap-captcha-to-cta: 8px;  /* tighten to offset above */
+    --gap-cta-to-divider: 7px;  /* tighten to offset above */
+    --gap-divider-to-socials: 9px;
+    --gap-input-to-hint: 7px;
+  }
+  .title { margin:0 0 .25rem; }
+  .login { margin-bottom:var(--gap-login-to-first); }
+  form { gap:0; }
+  .field { gap:var(--gap-field-internal); height:72px; }
+  .field span { font-size:.85rem; }
+  .field input { height:44px; min-height:44px; padding:.6rem .85rem; }
+  .hint { font-size:.78rem; margin-top:0; }
+  .terms { font-size:.83rem; }
+  .captcha { min-height:48px; padding:.45rem .65rem; margin:var(--gap-terms-to-captcha) 0 var(--gap-captcha-to-cta); }
+  .cta { height:44px; margin-top:0; }
+  .divider { margin:var(--gap-cta-to-divider) 0; }
+  .socials { gap:.7rem; }
+  .social { width:34px; height:34px; }
+}
+
+@media (max-height: 720px) and (min-width: 901px){
+  .form-wrap { margin-top:.5rem; height:auto; padding-top:26px; padding-bottom:22px;
+    --gap-hint-to-terms: 10px; /* keep exact 10px */
+    --gap-terms-to-captcha: 6px;
+    --gap-captcha-to-cta: 7px;
+    --gap-cta-to-divider: 6px;
+    --gap-divider-to-socials: 7px;
+    --gap-input-to-hint: 6px;
+  }
+  form { gap:0; }
+  .field { height:60px; }
+  .field input { min-height:38px; height:40px; padding:.55rem .75rem; }
+  .captcha { min-height:44px; padding:.4rem .6rem; margin:var(--gap-terms-to-captcha) 0 var(--gap-captcha-to-cta); }
+  .cta { height:40px; margin-top:0; }
+  .divider { margin:var(--gap-cta-to-divider) 0; }
+  .title { margin:0 0 .2rem; }
+  .login { margin-bottom:var(--gap-login-to-first); }
+}
+
+/* Very compact: ensure socials are visible without scroll on ~700-760px heights */
+@media (max-height: 800px) and (min-width: 901px){
+  .right { padding-top:1rem; padding-bottom:1rem; }
+  .form-wrap { margin-top:-1.6rem; padding-top:26px; padding-bottom:24px;
+    --gap-hint-to-terms: 10px;
+    --gap-cta-to-divider: 8px;
+    --gap-divider-to-socials: 9px;
+    --gap-input-to-hint: 6px;
+  }
+  form { gap:0; }
+  .field { height:68px; }
+  .field input { height:42px; min-height:42px; }
+  .cta { height:44px; }
+  .divider { margin:var(--gap-cta-to-divider) 0; }
+}
