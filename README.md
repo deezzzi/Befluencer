@@ -57,3 +57,7 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Onboarding overlay (dashboard)
+
+An onboarding modal appears 5 seconds after the dashboard loads (first visit only). It is implemented as a shared overlay with five steps. Code lives in `src/app/shared/onboarding/`. Illustration assets go under `src/assets/onboarding/`.

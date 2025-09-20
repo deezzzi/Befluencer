@@ -39,6 +39,7 @@ interface NavItem { icon: string; label: string; route: string; hasChildren?: bo
     <nav class="flex-1 overflow-y-auto px-3 pt-2 space-y-1">
       <ng-container *ngFor="let item of nav">
         <a
+          [attr.id]="item.label === 'Collab Tools' ? 'bf-collab-anchor' : null"
           [routerLink]="item.route"
           routerLinkActive="nav-active"
           #rla="routerLinkActive"
