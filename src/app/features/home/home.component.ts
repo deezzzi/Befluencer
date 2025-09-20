@@ -2,6 +2,11 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIf, NgFor } from '@angular/common';
 
+/**
+ * HomeComponent
+ * -------------
+ * Public landing page with language selector, login link, and role entry points.
+ */
 @Component({
   selector: 'bf-home-page',
   standalone: true,
@@ -54,9 +59,11 @@ export class HomeComponent {
   languages = ['English UK','Français','Español','Deutsch','中文'];
   selectedLanguage = this.languages[0];
 
+  /** Toggle the language dropdown panel. */
   toggleLang(){
     this.openLang = !this.openLang;
   }
+  /** Select a language; future: persist in preferences or i18n service. */
   selectLang(l: string){
     this.selectedLanguage = l;
     this.openLang = false;

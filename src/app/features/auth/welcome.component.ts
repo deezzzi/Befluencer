@@ -2,6 +2,11 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
+/**
+ * WelcomeComponent
+ * ----------------
+ * Post-OTP confirmation screen with CTA into the dashboard area.
+ */
 @Component({
   selector: 'bf-welcome',
   standalone: true,

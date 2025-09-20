@@ -2,6 +2,14 @@ import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy, inject
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
+/**
+ * TopbarComponent
+ *
+ * Minimal app bar for authenticated views.
+ * - Displays current page title derived from the deepest activated route's data.title.
+ * - Exposes a theme toggle and back navigation helper (kept hidden per design for now).
+ * - Mirrors sidebar collapsed state only to show a consistent toggle affordance alongside user avatar.
+ */
 @Component({
   selector: 'bf-topbar',
   standalone: true,

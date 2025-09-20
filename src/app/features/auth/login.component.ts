@@ -3,6 +3,16 @@ import { CommonModule, NgIf } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
+/**
+ * LoginComponent
+ * ---------------
+ * Login screen mirroring signup styling.
+ *
+ * Notes:
+ * - Reactive form validation for email/password.
+ * - Forgot password link routes to the dedicated OTP-forgot flow.
+ * - Replace TODO with real auth integration and error states.
+ */
 @Component({
   selector: 'bf-login',
   standalone: true,
@@ -77,6 +87,7 @@ export class LoginComponent {
   showPassword = false;
   constructor(private router: Router) {}
 
+  /** Placeholder submit: plug in real auth and route accordingly. */
   onSubmit() {
     if (this.form.valid) {
       // TODO: authenticate then route appropriately

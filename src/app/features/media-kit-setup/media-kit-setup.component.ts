@@ -7,6 +7,29 @@ import { Subject, merge } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 import { NgFor, NgIf, NgClass, SlicePipe, DecimalPipe, NgTemplateOutlet } from '@angular/common';
 
+/**
+ * MediaKitSetupComponent
+ *
+ * Purpose
+ * - Guides creators through a multi-step wizard to assemble a media kit.
+ * - Provides an interactive Preview step that summarizes entered data with empty-state placeholders.
+ *
+ * Key implementation notes
+ * - Uses standalone Angular component with OnPush change detection for predictable rendering.
+ * - Persists wizard state locally via WizardStateService (debounced autosave + explicit "Save for later").
+ * - Restores prior progress on init; defensively clamps step indices and filters invalid content items.
+ * - Sanitizes platform SVG icons once on init to allow safe [innerHTML] usage.
+ * - Enforces lightweight validation on steps that collect required fields before advancing.
+ *
+ * Accessibility
+ * - Stepper announces current step via aria-current.
+ * - Cards and controls expose roles and labels for keyboard and screen-reader support.
+ *
+ * Rationale
+ * - lastUpdatedStr is session-only (not persisted) to avoid churn in storage on every keystroke; the timeline is still visible to users.
+ * - Snapshot payload stores raw values (ids, booleans, text) to keep local storage small and robust to view/layout changes.
+ */
+
 @Component({
   selector: 'bf-media-kit-setup',
   standalone: true,
@@ -581,6 +604,7 @@ import { NgFor, NgIf, NgClass, SlicePipe, DecimalPipe, NgTemplateOutlet } from '
 })
 export class MediaKitSetupComponent implements OnInit, OnDestroy {
   @Output() titleChange = new EventEmitter<string>();
+  // Wizard steps shown in the left stepper; the last item is the Preview (read-only) page
   steps = [
     { label: 'Basic Information', desc: 'Tell us about yourself.' },
   { label: 'Socials & Stat', desc: 'Connect to your social<br>media accounts.' },
@@ -591,6 +615,7 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
   ];
   activeStep = 0;
   submitted = false;
+  // Step 1: Basic information form
   form = new FormBuilder().group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
@@ -604,6 +629,7 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
   languagesList = ['English','French','Spanish','German','Russian'];
   openAudience = false;
   openLanguages = false;
+  // Social platforms list; iconSafe is computed on init with DomSanitizer to render SVG safely
   platforms: Array<{ id:string; name:string; labelLower:string; connected:boolean; icon:string; iconSafe?: SafeHtml }> = [
   { id:'tiktok', name:'Tiktok', labelLower:'tiktok', connected:false, icon:`<svg width="40" height="45" viewBox="0 0 40 45" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_184_3697)">
@@ -635,10 +661,11 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
     facebook:'4.1k',
     snapchat:'9.7k'
   };
-  // Top content items; treat as valid only when a real thumbnail/url exists
+  // Top content items; treated as valid only when a real thumbnail/url exists (see load logic)
   topContents: { id:number; thumb?: string; url?: string }[] = [];
   // Placeholder previous collaborations list (would be aggregated from multiple form submissions later)
   previewCollaborations: { title: string; reach: string }[] = [];
+  // Step 3: Collaborations form
   collabForm = new FormBuilder().group({
     brand: ['', Validators.required],
     campaignName: ['', Validators.required],
@@ -650,6 +677,7 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
   openBrands = false;
   brandLogoPreview: string | null = null;
   @ViewChild('brandFile') private brandFileInput?: ElementRef<HTMLInputElement>;
+  // Service catalog used to toggle offered services (Step 4)
   servicesList = [
     { id:'sponsored', title:'Sponsored Posts', desc:'Promote a brand or product directly on your social media page as a paid post, tailored to your audience.' },
     { id:'reviews', title:'Product Reviews', desc:'Share your honest opinion about a product after using it — through a dedicated post, video, or story.' },
@@ -659,11 +687,13 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
     { id:'ambassador', title:'Brand Ambassador', desc:'Form a long-term partnership with a brand, representing them through regular content, exclusive deals, or affiliate codes.' }
   ];
   selectedServices: string[] = [];
+  // Charging rate options for Step 4
   chargingRates = [
     { id:'per_post', label:'Per post' },
     { id:'per_package', label:'Per package' },
     { id:'negotiable', label:'Negotiable' }
   ]; 
+  // Step 4: Rates form
   ratesForm = new FormBuilder().group({
     chargingRate:['per_post'],
     currency:['GHC'],
@@ -672,6 +702,7 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
   currencyList = ['GHC','USD','EUR','GBP','NGN'];
   openCurrency = false;
   /* Contact Info */
+  // Step 5: Contact info form
   contactForm = new FormBuilder().group({
     email: ['', Validators.required],
     bookingAvailability: ['', Validators.required],
@@ -693,6 +724,12 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
   progressTotal = 7;
   lastUpdatedStr: string | null = null;
 
+  /**
+   * Lifecycle: initialize component state.
+   * - Sanitizes inline SVG platform icons for safe rendering.
+   * - Loads any saved draft snapshot (with defensive bounds and filtering for top contents).
+   * - Wires a debounced autosave stream across all forms.
+   */
   ngOnInit(){
     this.emitTitle();
     // Sanitize platform icons so SVG renders properly
@@ -724,7 +761,7 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
       this.emitTitle();
     }
 
-    // Autosave on changes (debounced)
+    // Autosave on changes (debounced): snapshot + persist to local storage
     merge(
       this.form.valueChanges,
       this.collabForm.valueChanges,
@@ -732,12 +769,19 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
       this.contactForm.valueChanges
     ).pipe(debounceTime(400), takeUntil(this.destroy$)).subscribe(() => this.saveDraftInternal(false));
   }
+  /**
+   * Emits page title to parent and document.title, switching between Setup and Preview.
+   */
   private emitTitle(){
     const title = this.activeStep === this.steps.length-1 ? 'Media Kit Preview' : 'Media Kit Setup';
     this.titleChange.emit(title);
     // Optional: also set document title
     if(typeof document !== 'undefined') document.title = title;
   }
+  /**
+   * Advance to the next step if the current step passes validation.
+   * Resets error flags, closes dropdowns, updates title and persists draft.
+   */
   next(){
     // Validate current step before proceeding
     if(!this.validateCurrentStep()){
@@ -752,6 +796,9 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
       this.saveDraftInternal(false);
     }
   }
+  /**
+   * Navigate back one step; resets error flags and persists draft.
+   */
   prev(){
     if(this.activeStep>0){
       this.activeStep--;
@@ -761,7 +808,14 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
       this.saveDraftInternal(false);
     }
   }
+  /**
+   * Public entry to save an explicit draft, e.g., via "Save For Later" button.
+   */
   saveDraft(){ this.saveDraftInternal(true); }
+  /**
+   * Captures a normalized snapshot of the wizard and persists it via the state service.
+   * @param explicit when true, surfaces a lightweight confirmation (alert) to the user.
+   */
   private saveDraftInternal(explicit: boolean){
     // update last updated (not persisted – session level)
     const now = new Date();
@@ -784,15 +838,28 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
       if(typeof window !== 'undefined') window.alert('Draft saved locally. You can resume later.');
     }
   }
+  /**
+   * Allow jumping backwards to a completed step via the stepper.
+   */
   jump(i: number){ if(i < this.activeStep){ this.activeStep = i; this.emitTitle(); this.saveDraftInternal(false); } }
   constructor(private router: Router, private sanitizer: DomSanitizer, private state: WizardStateService){}
+  /**
+   * Finalize wizard: marks submitted state and navigates to the saved media kit route.
+   * (API submission would be added here in a future implementation.)
+   */
   finish(){
     this.submitted = true;
     this.emitTitle();
     // Navigate to saved page
     this.router.navigate(['/media-kit/saved']);
   }
+  /**
+   * Dispose autosave subscriptions.
+   */
   ngOnDestroy(){ this.destroy$.next(); this.destroy$.complete(); }
+  /**
+   * Gate movement between steps by validating forms with required fields.
+   */
   private validateCurrentStep(): boolean {
     switch(this.activeStep){
       case 0: // Basic Information
@@ -805,6 +872,9 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
         return true; // Steps without required fields
     }
   }
+  /**
+   * Closes all dropdown menus; called on step changes to avoid stranded popovers.
+   */
   private closeAllDropdowns(){
     this.openAudience = false;
     this.openLanguages = false;
@@ -814,6 +884,9 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
     this.openSocialsAccount = false;
     this.openPreferredContact = false;
   }
+  /**
+   * Quick access to the Preview step without completing all prior steps.
+   */
   openPreview(e: Event){
     e.preventDefault();
     this.activeStep = this.steps.length - 1;
@@ -822,6 +895,7 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
     this.emitTitle();
     this.saveDraftInternal(false);
   }
+  // --- Dropdown & selection helpers (UX only; persistence handled by autosave) ---
   toggleAudience(){ this.openAudience = !this.openAudience; this.openLanguages = false; }
   toggleLanguages(){ this.openLanguages = !this.openLanguages; this.openAudience = false; }
   selectAudience(val: string){ this.form.patchValue({ audienceBase: val }); this.openAudience = false; }
@@ -830,12 +904,18 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
   editPlatform(p: any){ /* TODO: open edit modal */ }
   toggleBrands(){ this.openBrands = !this.openBrands; }
   selectBrand(b: string){ this.collabForm.patchValue({ brand: b }); this.openBrands = false; }
+  /**
+   * Opens the hidden file input to select a brand logo image.
+   */
   triggerBrandFile(){
     const el = this.brandFileInput?.nativeElement;
     if(el){
       el.click();
     }
   }
+  /**
+   * Reads and previews an image file for brand logo with basic type/size validation.
+   */
   onBrandLogoSelected(e: Event){
     const input = e.target as HTMLInputElement;
     if(input.files && input.files[0]){
@@ -866,6 +946,7 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
   selectSocialsAccount(val: string){ this.contactForm.patchValue({ socialsAccount: val }); this.openSocialsAccount = false; }
   togglePreferredContact(){ this.openPreferredContact = !this.openPreferredContact; this.openBookingAvailability = false; this.openSocialsAccount = false; }
   selectPreferredContact(val: string){ this.contactForm.patchValue({ preferredMethod: val }); this.openPreferredContact = false; }
+  /** Convert internal charging rate code to a human-friendly label for preview. */
   readableRate(code: string | null){
     if(!code) return '';
     switch(code){
@@ -878,11 +959,15 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
       default: return code.replace(/_/g,' ');
     }
   }
+  /** Numeric getter for amount input with NaN safety. */
   get amountValue(): number {
     const raw = this.ratesForm.value.amount as any;
     const num = parseFloat(raw);
     return isNaN(num) ? 0 : num;
   }
+  /**
+   * Formats the preferred contact for preview; expands WhatsApp to include number if provided.
+   */
   preferredContactDisplay(){
     const method = this.contactForm.value.preferredMethod;
     if(!method) return '';
@@ -891,16 +976,21 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
     }
     return method;
   }
+  /** Ensure preview links are navigable by prefixing missing protocols. */
   formatWebsite(url: string){
     if(!url) return '';
     if(!/^https?:\/\//i.test(url)) return 'https://' + url;
     return url;
   }
+  /**
+   * Adds a blank top content item shell; only entries with thumb/url are considered non-empty in preview.
+   */
   addContent(){
     const nextId = this.topContents.length + 1;
     this.topContents.push({ id: nextId });
   }
   // ---------- Empty-state helpers & progress ----------
+  /** Truthy text check used by multiple empty-state helpers. */
   private hasText(v: any){ return !!(v && String(v).trim().length); }
   isEmptyBasicInfo(){
     const v = this.form.value;
@@ -929,6 +1019,7 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
     // Consider non-empty only if at least one item has a real thumbnail or url
     return !(Array.isArray(this.topContents) && this.topContents.some(c => !!(c && (c.thumb || c.url))));
   }
+  /** Count of sections considered "complete" for the preview status card. */
   get progressDone(){
     let done = 0;
     if(!this.isEmptyBasicInfo()) done++;
@@ -943,6 +1034,7 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
     return done;
   }
   get allComplete(){ return this.progressDone >= this.progressTotal; }
+  /** Returns the first step index that still needs user input to be considered complete. */
   private firstIncompleteStep(): number {
     // Map to step indices: 0 Basic, 1 Socials, 2 Collab, 3 Rates, 4 Contact
     if(this.isEmptyBasicInfo()) return 0;
@@ -953,6 +1045,7 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
     return 0;
   }
   continueToFirstIncomplete(){ this.activeStep = this.firstIncompleteStep(); this.emitTitle(); }
+  /** Formats a short timestamp like "10:42 AM | Jan,05" with i18n safety fallback. */
   private formatTimestamp(d: Date){
     try{
       const opts: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: '2-digit' };

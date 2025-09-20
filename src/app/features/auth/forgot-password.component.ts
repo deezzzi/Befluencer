@@ -4,6 +4,12 @@ import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Va
 import { Router, RouterLink } from '@angular/router';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 
+/**
+ * ForgotPasswordComponent
+ * -----------------------
+ * OTP step for password reset, mirroring OTP UX and cooldown with masked email.
+ * On success, routes to Create New Password screen.
+ */
 @Component({
   selector: 'bf-forgot-password',
   standalone: true,
@@ -154,6 +160,7 @@ export class ForgotPasswordComponent implements OnDestroy {
     this.startCooldown(60);
   }
 
+  /** Start/reset the resend cooldown timer (seconds). */
   private startCooldown(seconds: number) {
     this.cooldown = seconds;
     if (this.timerId) clearInterval(this.timerId);
@@ -167,6 +174,7 @@ export class ForgotPasswordComponent implements OnDestroy {
     }, 1000);
   }
 
+  /** Ensure timer is cleaned up to avoid memory leaks. */
   ngOnDestroy(): void {
     if (this.timerId) {
       clearInterval(this.timerId);
@@ -174,6 +182,7 @@ export class ForgotPasswordComponent implements OnDestroy {
     }
   }
 
+  /** Submit handler: verify code then proceed to create password. */
   onVerify() {
     if (this.form.valid) {
       const value = this.code.controls.map(c => c.value).join('');

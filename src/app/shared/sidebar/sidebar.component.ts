@@ -4,6 +4,14 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 
 interface NavItem { icon: string; label: string; route: string; hasChildren?: boolean; }
 
+/**
+ * SidebarComponent
+ *
+ * Collapsible primary navigation for dashboard routes.
+ * - Receives `collapsed` state and emits `toggle` to parent layout.
+ * - Renders a static nav map; active route highlighted via RouterLinkActive.
+ * - Icons are inlined SVGs selected via ngSwitch for minimal runtime cost.
+ */
 @Component({
   selector: 'bf-sidebar',
   standalone: true,

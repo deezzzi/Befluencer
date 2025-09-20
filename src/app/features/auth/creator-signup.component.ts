@@ -4,6 +4,16 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 
+/**
+ * CreatorSignupComponent
+ * ----------------------
+ * Signup screen for creators following the split screen layout.
+ *
+ * UX/Logic notes:
+ * - Uses Reactive Forms for validation (required + email + min length).
+ * - Persists email via LocalStorage to survive refresh and to aid OTP flow.
+ * - On submit, navigates to OTP with email passed in router state.
+ */
 @Component({
   selector: 'bf-creator-signup',
   standalone: true,
@@ -93,6 +103,7 @@ export class CreatorSignupComponent {
   showPassword = false;
   constructor(private router: Router, private storage: LocalStorageService) {}
 
+  /** Handle submit: persist email and proceed to OTP. */
   onSubmit() {
     if (this.form.valid) {
       const email = this.form.value.email as string;

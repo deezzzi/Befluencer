@@ -4,6 +4,12 @@ import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Va
 import { Router, RouterLink } from '@angular/router';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 
+/**
+ * OtpVerificationComponent
+ * ------------------------
+ * 4-digit OTP input UX with auto-advance, backspace navigation, arrow key support, and paste distribute.
+ * Includes resend cooldown timer and masked email display.
+ */
 @Component({
   selector: 'bf-otp-verification',
   standalone: true,
@@ -158,6 +164,7 @@ export class OtpVerificationComponent implements OnDestroy {
     this.startCooldown(60);
   }
 
+  /** Start/reset the resend cooldown timer (seconds). */
   private startCooldown(seconds: number) {
     this.cooldown = seconds;
     if (this.timerId) clearInterval(this.timerId);
@@ -171,6 +178,7 @@ export class OtpVerificationComponent implements OnDestroy {
     }, 1000);
   }
 
+  /** Ensure timer is cleaned up to avoid leaks. */
   ngOnDestroy(): void {
     if (this.timerId) {
       clearInterval(this.timerId);
@@ -178,6 +186,7 @@ export class OtpVerificationComponent implements OnDestroy {
     }
   }
 
+  /** Submit handler: verify the code then proceed to Welcome. */
   onVerify() {
     if (this.form.valid) {
       const value = this.code.controls.map(c => c.value).join('');

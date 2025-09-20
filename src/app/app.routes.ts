@@ -1,3 +1,15 @@
+/**
+ * Application Routes
+ *
+ * Structure
+ * - Public landing and auth flows live at the top level for small/clean URLs.
+ * - Auth screens are lazy-loaded to keep initial bundle small (faster first paint).
+ * - Dashboard area is nested under a layout component and hosts feature routes.
+ *
+ * Conventions
+ * - Each route specifies a `data.title` for document title management (future hook).
+ * - Prefer `loadComponent` for standalone, lazy pages.
+ */
 import { Routes } from '@angular/router';
 import { DashboardLayoutComponent } from './layout/dashboard-layout.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
@@ -15,22 +27,27 @@ import { SupportComponent } from './features/support/support.component';
 import { CreatorSignupComponent } from './features/auth/creator-signup.component';
 
 export const routes: Routes = [
-  // Landing page as the initial route
+  // Public landing
   { path: '', component: HomeComponent, data: { title: 'Home' } },
+
+  // Auth flows (standalone + mostly lazy-loaded)
   { path: 'signup/creator', component: CreatorSignupComponent, data: { title: 'Sign up - Creator' } },
   { path: 'login', loadComponent: () => import('./features/auth/login.component').then(m => m.LoginComponent), data: { title: 'Log in' } },
   { path: 'auth/otp', loadComponent: () => import('./features/auth/otp-verification.component').then(m => m.OtpVerificationComponent), data: { title: 'OTP Verification' } },
   { path: 'auth/welcome', loadComponent: () => import('./features/auth/welcome.component').then(m => m.WelcomeComponent), data: { title: 'Welcome' } },
   { path: 'auth/forgot', loadComponent: () => import('./features/auth/forgot-password.component').then(m => m.ForgotPasswordComponent), data: { title: 'Forgot Password' } },
   { path: 'auth/create-password', loadComponent: () => import('./features/auth/create-password.component').then(m => m.CreatePasswordComponent), data: { title: 'Create New Password' } },
+
+  // Dashboard area
   {
     path: '',
     component: DashboardLayoutComponent,
     children: [
-      // Keep dashboard as the default under the dashboard layout
+      // Default to dashboard
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
       { path: 'dashboard', component: DashboardComponent, data: { title: 'Dashboard' } },
-      // Home route remains accessible explicitly if needed
+
+      // Feature pages
       { path: 'home', component: HomeComponent, data: { title: 'Home' } },
       { path: 'campaigns', component: CampaignsComponent, data: { title: 'Campaigns' } },
       { path: 'media-kit', component: MediaKitComponent, data: { title: 'Media Kit' } },
@@ -46,5 +63,7 @@ export const routes: Routes = [
       { path: 'support', component: SupportComponent, data: { title: 'Support' } },
     ]
   },
+
+  // Fallback: redirect unknown paths to landing
   { path: '**', redirectTo: '' }
 ];

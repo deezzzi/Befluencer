@@ -86,6 +86,17 @@ function passwordsMatch(group: AbstractControl): ValidationErrors | null {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreatePasswordComponent {
+  /**
+   * CreatePasswordComponent
+   *
+   * Purpose
+   * - Final step of the reset password flow; captures a new password and confirmation.
+   * - Mirrors the login field styling and toggles for show/hide per design.
+   *
+   * Notes
+   * - Cross-field validator `passwordsMatch` is applied at the FormGroup level.
+   * - Submit currently routes to /login; wire to API on integration.
+   */
   // Form will be initialized in constructor to ensure FormBuilder is available
   form!: ReturnType<FormBuilder['group']>;
 
