@@ -2,6 +2,12 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.15.
 
+## Project documentation
+
+For a comprehensive engineering guide (architecture, workflows, quality, operations), see `documentation.md`.
+
+- Design System & Branding: See the "Design System & Branding" section inside `documentation.md` for typography, colors, spacing, components, and accessibility guidelines.
+
 ## Development server
 
 To start a local development server, run:
@@ -60,4 +66,13 @@ For more information on using the Angular CLI, including detailed command refere
 
 ## Onboarding overlay (dashboard)
 
-An onboarding modal appears 5 seconds after the dashboard loads (first visit only). It is implemented as a shared overlay with five steps. Code lives in `src/app/shared/onboarding/`. Illustration assets go under `src/assets/onboarding/`.
+An onboarding "Tour" can appear ~5 seconds after the dashboard loads (first visit only). It is implemented as a shared overlay with four steps:
+
+- Step 1: Centered welcome modal with blurred backdrop
+- Step 2: Tooltip for Notifications (bell)
+- Step 3: Tooltip for Profile
+- Step 4: Tooltip for Side Panel (final, with Close)
+
+Only Step 1 applies a blurred/dimmed backdrop; Steps 2–4 are anchored tooltips without blur. Code lives in `src/app/shared/onboarding/`.
+
+For detailed behavior, anchors, and extension guidance, see `documentation.md`.
