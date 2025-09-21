@@ -26,6 +26,13 @@ import { AccountOnboardingStep6GoalsComponent } from './steps/account-onboarding
     AccountOnboardingStep6GoalsComponent
   ],
   template: `
+  <!--
+    Account Onboarding Overlay Host
+    - Renders a centered modal card for each step (1..6)
+    - Backdrop: always dim/blur for this flow (unlike Product Tour)
+    - Actions: "Back" on the left, indicators in the middle, "Continue/Finish" on right
+    - Step 1 embeds its CTA inside the content; thus actions row is hidden for step 1
+  -->
   <div *ngIf="(svc.open$ | async)" class="fixed inset-0 z-50">
     <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
 
@@ -33,6 +40,7 @@ import { AccountOnboardingStep6GoalsComponent } from './steps/account-onboarding
       <div role="dialog" aria-modal="true" class="w-full max-w-xl rounded-2xl bg-white text-gray-900 shadow-2xl ring-1 ring-black/5">
         <div class="p-6 sm:p-7">
           <ng-container *ngIf="(svc.step$ | async) as step">
+            <!-- Switch between step bodies -->
             <ng-container [ngSwitch]="step">
               <bf-account-onboarding-step1 *ngSwitchCase="1" [displayName]="displayName"></bf-account-onboarding-step1>
               <bf-account-onboarding-step2 *ngSwitchCase="2"></bf-account-onboarding-step2>
@@ -51,11 +59,13 @@ import { AccountOnboardingStep6GoalsComponent } from './steps/account-onboarding
                 </button>
               </div>
               <div class="justify-self-center flex items-center gap-2" aria-hidden="true">
+                <!-- Simple step indicators (active bar is orange) -->
                 <ng-container *ngFor="let i of indicators">
                   <div class="h-1.5 w-8 rounded-full" [class.bg-orange-500]="i === step" [class.bg-gray-300]="i !== step"></div>
                 </ng-container>
               </div>
               <div class="justify-self-end">
+                <!-- Continue moves to next step; on last step becomes Finish -->
                 <button type="button" class="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-full text-sm" (click)="svc.next()">
                   {{ step === 6 ? 'Finish' : 'Continue' }} <span aria-hidden>→</span>
                 </button>

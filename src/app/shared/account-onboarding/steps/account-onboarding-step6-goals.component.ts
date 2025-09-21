@@ -7,6 +7,7 @@ import { AccountOnboardingService } from '../account-onboarding.service';
   standalone: true,
   imports: [NgFor],
   template: `
+    <!-- Step 6: Goals. Multi-select chips; selected are black. Finish closes and marks onboarding complete. -->
     <div>
       <h3 class="text-xl font-bold text-gray-900">What will you use Befluencer for?</h3>
 
@@ -17,9 +18,9 @@ import { AccountOnboardingService } from '../account-onboarding.service';
                 class="px-4 py-2 rounded-full border text-sm transition-colors"
                 [class.border-slate-300]="!isSelected(g.key)"
                 [class.text-gray-700]="!isSelected(g.key)"
-                [class.bg-orange-500]="isSelected(g.key)"
+                [class.bg-black]="isSelected(g.key)"
                 [class.text-white]="isSelected(g.key)"
-                [class.border-orange-500]="isSelected(g.key)">
+                [class.border-black]="isSelected(g.key)">
           {{ g.label }}
         </button>
       </div>

@@ -7,6 +7,7 @@ import { AccountOnboardingService } from '../account-onboarding.service';
   standalone: true,
   imports: [NgFor],
   template: `
+    <!-- Step 3: Platforms (multi-select). Selected chips are black. -->
     <div>
       <h3 class="text-xl font-bold text-gray-900">Which social platform are you most active on?</h3>
       <p class="mt-1 text-sm text-gray-500">(select as many)</p>
@@ -18,9 +19,9 @@ import { AccountOnboardingService } from '../account-onboarding.service';
                 class="px-4 py-2 rounded-full border text-sm transition-colors"
                 [class.border-slate-300]="!isSelected(p.key)"
                 [class.text-gray-700]="!isSelected(p.key)"
-                [class.bg-orange-500]="isSelected(p.key)"
+                [class.bg-black]="isSelected(p.key)"
                 [class.text-white]="isSelected(p.key)"
-                [class.border-orange-500]="isSelected(p.key)">
+                [class.border-black]="isSelected(p.key)">
           {{ p.label }}
         </button>
       </div>

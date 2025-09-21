@@ -7,6 +7,7 @@ import { AccountOnboardingService } from '../account-onboarding.service';
   standalone: true,
   imports: [NgFor],
   template: `
+    <!-- Step 4: Experience (single-select radio). Persists selected key via service. -->
     <div>
       <h3 class="text-xl font-bold text-gray-900">How long have you been creating content?</h3>
 

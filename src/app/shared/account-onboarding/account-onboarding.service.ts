@@ -4,17 +4,26 @@ import { LocalStorageService } from '../services/local-storage.service';
 
 /**
  * AccountOnboardingService
+ * -------------------------------------------------------------
+ * Source of truth for the post-login Account Onboarding flow.
+ * This flow is distinct from the Product Tour (which is in-app
+ * and uses anchored tooltips). Account Onboarding is a sequence
+ * of centered modal cards with 6 steps and persistent state.
  *
- * Manages the post-login onboarding modal flow. This is distinct from the in-app
- * Product Tour. This flow is purely modal (no anchored tooltips) and has six steps.
+ * Contract (can be customized by consumers):
+ * 1) Welcome (pixel-aligned to the screenshot)
+ * 2) Content types (multi-select chips)
+ * 3) Platforms (multi-select chips)
+ * 4) Experience length (single-select)
+ * 5) Where did you hear about us? (multi-select with optional inputs)
+ *    - If "Referral" selected: show referral code input
+ *    - If "Other" selected: show freeform text input
+ * 6) What will you use Befluencer for? (multi-select chips)
+ *    - Final step "Finish" marks the flow completed
  *
- * Steps contract (default, can be customized):
- * 1) Welcome (screenshot-aligned)
- * 2) Profile basics
- * 3) Connect socials
- * 4) Audience & categories
- * 5) Preferences & goals
- * 6) Review & finish (sets completed flag)
+ * Persistence
+ * - We use LocalStorage via LocalStorageService to keep progress
+ *   and inputs across reloads. See keys used below.
  */
 @Injectable({ providedIn: 'root' })
 export class AccountOnboardingService {
@@ -29,20 +38,34 @@ export class AccountOnboardingService {
   step$ = this._step$.asObservable();
 
   // Content types selection state (Step 2)
+  // Key: 'account-onboarding:content-types' (string[])
   private _contentTypes$ = new BehaviorSubject<Set<string>>(new Set());
   contentTypes$ = this._contentTypes$.asObservable();
+  // Platforms selection state (Step 3)
+  // Key: 'account-onboarding:platforms' (string[])
   private _platforms$ = new BehaviorSubject<Set<string>>(new Set());
   platforms$ = this._platforms$.asObservable();
+  // Experience selection (Step 4)
+  // Key: 'account-onboarding:experience' (string)
   private _experience$ = new BehaviorSubject<string | null>(null);
   experience$ = this._experience$.asObservable();
   // Hear about us (Step 5)
+  // Keys: 'account-onboarding:referrers' (string[])
+  //       'account-onboarding:referrer-other' (string)
+  //       'account-onboarding:referrer-referral-code' (string)
   private _referrers$ = new BehaviorSubject<Set<string>>(new Set());
   referrers$ = this._referrers$.asObservable();
+  private _referrerOther$ = new BehaviorSubject<string>('');
+  referrerOther$ = this._referrerOther$.asObservable();
+  private _referralCode$ = new BehaviorSubject<string>('');
+  referralCode$ = this._referralCode$.asObservable();
   // Goals (Step 6)
+  // Key: 'account-onboarding:goals' (string[])
   private _goals$ = new BehaviorSubject<Set<string>>(new Set());
   goals$ = this._goals$.asObservable();
 
   constructor() {
+    // Hydrate persisted progress/state on service creation.
     const saved = this.storage.getJSON<string[]>('account-onboarding:content-types');
     if (Array.isArray(saved)) this._contentTypes$.next(new Set(saved));
     const savedPlatforms = this.storage.getJSON<string[]>('account-onboarding:platforms');
@@ -51,10 +74,15 @@ export class AccountOnboardingService {
     if (typeof exp === 'string') this._experience$.next(exp);
     const savedReferrers = this.storage.getJSON<string[]>('account-onboarding:referrers');
     if (Array.isArray(savedReferrers)) this._referrers$.next(new Set(savedReferrers));
+  const otherRef = this.storage.getJSON<string>('account-onboarding:referrer-other');
+  if (typeof otherRef === 'string') this._referrerOther$.next(otherRef);
+  const code = this.storage.getJSON<string>('account-onboarding:referrer-referral-code');
+  if (typeof code === 'string') this._referralCode$.next(code);
     const savedGoals = this.storage.getJSON<string[]>('account-onboarding:goals');
     if (Array.isArray(savedGoals)) this._goals$.next(new Set(savedGoals));
   }
 
+  /** Add or remove a content type selection (Step 2) */
   toggleContentType(key: string): void {
     const next = new Set(this._contentTypes$.value);
     if (next.has(key)) next.delete(key); else next.add(key);
@@ -71,7 +99,7 @@ export class AccountOnboardingService {
     return this._contentTypes$.value.has(key);
   }
 
-  // Platforms selection (Step 3)
+  /** Add or remove a platform selection (Step 3) */
   togglePlatform(key: string): void {
     const next = new Set(this._platforms$.value);
     if (next.has(key)) next.delete(key); else next.add(key);
@@ -87,7 +115,7 @@ export class AccountOnboardingService {
     return this._platforms$.value.size > 0;
   }
 
-  // Experience (Step 4)
+  /** Set experience radio selection (Step 4) */
   setExperience(key: string): void {
     this._experience$.next(key);
     this.storage.setJSON('account-onboarding:experience', key);
@@ -111,6 +139,21 @@ export class AccountOnboardingService {
     return this._referrers$.value.size > 0;
   }
 
+  /** Persist freeform details when 'Other' referrer is selected (Step 5) */
+  setReferrerOther(value: string): void {
+    this._referrerOther$.next(value);
+    this.storage.setJSON('account-onboarding:referrer-other', value);
+  }
+
+  getReferrerOther(): string { return this._referrerOther$.value; }
+
+  /** Persist referral code when 'Referral' referrer is selected (Step 5) */
+  setReferralCode(value: string): void {
+    this._referralCode$.next(value);
+    this.storage.setJSON('account-onboarding:referrer-referral-code', value);
+  }
+  getReferralCode(): string { return this._referralCode$.value; }
+
   // Goals
   toggleGoal(key: string): void {
     const next = new Set(this._goals$.value);
@@ -128,7 +171,7 @@ export class AccountOnboardingService {
     return !!(val && val.done);
   }
 
-  /** Mark onboarding as completed. */
+  /** Mark onboarding as completed and persist completion metadata. */
   markCompleted(): void {
     this.storage.setJSON(this.storageKey, { done: true, at: new Date().toISOString() });
   }

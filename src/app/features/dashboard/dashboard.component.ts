@@ -135,6 +135,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     { title: 'Conversion', value: '4.9%', diff: 0.6 },
   ];
 
+  // When onboarding closes as completed, we schedule the Tour.
   private onboardingSub?: { unsubscribe(): void };
 
   ngAfterViewInit(): void {
@@ -143,7 +144,8 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
       // Small delay to allow view to settle
       setTimeout(() => this.accountOnboarding.open(1), 300);
 
-      // When onboarding closes as completed, trigger the Tour after ~5s (once)
+      // When onboarding closes as completed, trigger the Tour after ~5s (once).
+      // We detect the first open->close transition and then check completion.
       let seenOpen = false;
       this.onboardingSub = this.accountOnboarding.open$.subscribe(open => {
         if (open) {

@@ -1,12 +1,16 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { AccountOnboardingService } from '../account-onboarding.service';
 
 @Component({
   selector: 'bf-account-onboarding-step5-hearabout',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor, NgIf],
   template: `
+    <!-- Step 5: Hear about us. Multi-select chips.
+         - If 'Referral' selected: show "Enter referral code"
+         - If 'Other' selected: show "Please specify..."
+         Selected chips are black -->
     <div>
       <h3 class="text-xl font-bold text-gray-900">Where did you hear about us?</h3>
 
@@ -17,11 +21,33 @@ import { AccountOnboardingService } from '../account-onboarding.service';
                 class="px-4 py-2 rounded-full border text-sm transition-colors"
                 [class.border-slate-300]="!isSelected(r.key)"
                 [class.text-gray-700]="!isSelected(r.key)"
-                [class.bg-orange-500]="isSelected(r.key)"
+                [class.bg-black]="isSelected(r.key)"
                 [class.text-white]="isSelected(r.key)"
-                [class.border-orange-500]="isSelected(r.key)">
+                [class.border-black]="isSelected(r.key)">
           {{ r.label }}
         </button>
+      </div>
+
+      <!-- Referral code input -->
+      <div class="mt-5" *ngIf="isSelected('referral')">
+        <input
+          type="text"
+          class="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+          placeholder="Enter referral code"
+          [value]="svc.getReferralCode()"
+          (input)="onReferralInput($any($event.target).value)"
+        />
+      </div>
+
+      <!-- Other details input -->
+      <div class="mt-5" *ngIf="isSelected('other')">
+        <input
+          type="text"
+          class="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+          placeholder="Please specify..."
+          [value]="svc.getReferrerOther()"
+          (input)="onOtherInput($any($event.target).value)"
+        />
       </div>
     </div>
   `,
@@ -47,4 +73,6 @@ export class AccountOnboardingStep5HearAboutComponent {
 
   toggle(key: string) { this.svc.toggleReferrer(key); }
   isSelected(key: string) { return this.svc.hasReferrer(key); }
+  onOtherInput(v: string) { this.svc.setReferrerOther(v); }
+  onReferralInput(v: string) { this.svc.setReferralCode(v); }
 }
