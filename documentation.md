@@ -72,6 +72,26 @@ This document provides a comprehensive, professional overview of the frontend co
 
 Customization and troubleshooting details are in the Onboarding section at the end of this guide.
 
+### 4.3 Account Onboarding (Post-login)
+
+- Location: `src/app/shared/account-onboarding/`
+- Flow: 6 modal steps; always centered with blurred/dimmed backdrop
+- Trigger: After login/first arrival to the dashboard, opens automatically if not completed
+- Service API: `open(step=1)`, `close()`, `next()`, `back()`, `isCompleted()`, `markCompleted()`
+- Persistence: Uses `localStorage` key `befluencer:account-onboarding.v1` to persist completion
+- Step 1: Welcome modal that matches the provided mock (orange “Welcome”, user name, supportive copy)
+- Steps 2–5: Placeholders for profile basics, socials, audience/categories, and preferences
+- Step 6: Review & Finish — marks completed and closes the flow
+- Display name: Resolved from `befluencer:profile:displayName` or `befluencer:auth:user` (fallback to “John Doe”)
+
+Files:
+- `account-onboarding.service.ts` — state, step navigation, completion persistence
+- `account-onboarding-overlay.component.ts` — modal host with actions, step indicators
+- `steps/account-onboarding-step[1-6].component.ts` — six standalone step components
+
+Dashboard wiring:
+- The dashboard checks `AccountOnboardingService.isCompleted()` in `ngAfterViewInit()` and opens step 1 with a small delay if not completed. The Product Tour remains gated separately and opens only after the Account Onboarding is finished.
+
 ## 5. Quality Gates
 
 - Build: `npm run build` must succeed with no TypeScript errors

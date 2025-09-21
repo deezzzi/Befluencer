@@ -1,15 +1,17 @@
-import { Component, ChangeDetectionStrategy, inject, OnInit, AfterViewInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, AfterViewInit } from '@angular/core';
 import { NgFor, NgClass, NgIf } from '@angular/common';
 import { OnboardingOverlayComponent } from '../../shared/onboarding/onboarding-overlay.component';
 import { OnboardingService } from '../../shared/onboarding/onboarding.service';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
+import { AccountOnboardingOverlayComponent } from '../../shared/account-onboarding/account-onboarding-overlay.component';
+import { AccountOnboardingService } from '../../shared/account-onboarding/account-onboarding.service';
 
 interface StatCard { title: string; value: string; diff?: number; }
 
 @Component({
   selector: 'bf-dashboard-page',
   standalone: true,
-  imports: [NgFor, NgClass, NgIf, OnboardingOverlayComponent],
+  imports: [NgFor, NgClass, NgIf, OnboardingOverlayComponent, AccountOnboardingOverlayComponent],
   template: `
   <div class="space-y-4 md:space-y-6">
     <section>
@@ -114,8 +116,10 @@ interface StatCard { title: string; value: string; diff?: number; }
         </ul>
       </div>
     </section>
-    <!-- Onboarding overlay host -->
+    <!-- In-app Tour overlay host -->
     <bf-onboarding-overlay />
+    <!-- Account Onboarding overlay host (post-login, modal 6 steps) -->
+    <bf-account-onboarding-overlay />
   </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -123,6 +127,7 @@ interface StatCard { title: string; value: string; diff?: number; }
 export class DashboardComponent implements AfterViewInit {
   private onboarding = inject(OnboardingService);
   private storage = inject(LocalStorageService);
+  private accountOnboarding = inject(AccountOnboardingService);
   cards: StatCard[] = [
     { title: 'Users', value: '12.4K', diff: 4.2 },
     { title: 'Revenue', value: '$86K', diff: 1.1 },
@@ -131,11 +136,18 @@ export class DashboardComponent implements AfterViewInit {
   ];
 
   ngAfterViewInit(): void {
-    // Show onboarding after 5 seconds on first visit to dashboard
-    const seen = this.storage.getJSON<boolean>('onboarding:dashboard:seen');
-    if (!seen) {
+    // 1) Account Onboarding (modal, 6 steps) — show immediately after login if not completed
+    if (!this.accountOnboarding.isCompleted()) {
+      // Small delay to allow view to settle
+      setTimeout(() => this.accountOnboarding.open(1), 300);
+      return; // Defer Tour until the account onboarding is completed
+    }
+
+    // 2) Product Tour — open once after 5s on first dashboard visit
+    const tourSeen = this.storage.getJSON<boolean>('tour:dashboard:seen');
+    if (!tourSeen) {
       setTimeout(() => this.onboarding.open(1), 5000);
-      this.storage.setJSON('onboarding:dashboard:seen', true);
+      this.storage.setJSON('tour:dashboard:seen', true);
     }
   }
 }
