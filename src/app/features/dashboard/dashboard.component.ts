@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, AfterViewInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, AfterViewInit, OnDestroy } from '@angular/core';
 import { NgFor, NgClass, NgIf } from '@angular/common';
 import { OnboardingOverlayComponent } from '../../shared/onboarding/onboarding-overlay.component';
 import { OnboardingService } from '../../shared/onboarding/onboarding.service';
@@ -124,7 +124,7 @@ interface StatCard { title: string; value: string; diff?: number; }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardComponent implements AfterViewInit {
+export class DashboardComponent implements AfterViewInit, OnDestroy {
   private onboarding = inject(OnboardingService);
   private storage = inject(LocalStorageService);
   private accountOnboarding = inject(AccountOnboardingService);
@@ -135,11 +135,27 @@ export class DashboardComponent implements AfterViewInit {
     { title: 'Conversion', value: '4.9%', diff: 0.6 },
   ];
 
+  private onboardingSub?: { unsubscribe(): void };
+
   ngAfterViewInit(): void {
     // 1) Account Onboarding (modal, 6 steps) — show immediately after login if not completed
     if (!this.accountOnboarding.isCompleted()) {
       // Small delay to allow view to settle
       setTimeout(() => this.accountOnboarding.open(1), 300);
+
+      // When onboarding closes as completed, trigger the Tour after ~5s (once)
+      let seenOpen = false;
+      this.onboardingSub = this.accountOnboarding.open$.subscribe(open => {
+        if (open) {
+          seenOpen = true;
+        } else if (seenOpen && this.accountOnboarding.isCompleted()) {
+          const tourSeen = this.storage.getJSON<boolean>('tour:dashboard:seen');
+          if (!tourSeen) {
+            setTimeout(() => this.onboarding.open(1), 5000);
+            this.storage.setJSON('tour:dashboard:seen', true);
+          }
+        }
+      });
       return; // Defer Tour until the account onboarding is completed
     }
 
@@ -149,5 +165,9 @@ export class DashboardComponent implements AfterViewInit {
       setTimeout(() => this.onboarding.open(1), 5000);
       this.storage.setJSON('tour:dashboard:seen', true);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.onboardingSub?.unsubscribe?.();
   }
 }
