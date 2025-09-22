@@ -119,18 +119,47 @@
       <div *ngIf="activeStep===1" class="socials-step">
         <div class="platform-grid" role="list">
           <div class="platform-card" *ngFor="let p of platforms" role="listitem" [class.connected]="p.connected">
-            <div class="top-row">
-              <div class="icon" aria-hidden="true" [innerHTML]="p.iconSafe || p.icon"></div>
-              <div class="meta">
-                <div class="name">{{ p.name }}</div>
-                <div class="hint">Connect to your {{ p.labelLower }}</div>
-              </div>
-            </div>
             <div class="actions-row">
-              <button type="button" class="connect-btn" (click)="toggleConnect(p)" [attr.aria-pressed]="p.connected">
-                <span *ngIf="!p.connected">Connect</span>
+              <button
+                type="button"
+                class="connect-btn"
+                [class.connecting]="p.connecting"
+                [disabled]="p.connecting"
+                [attr.aria-busy]="p.connecting || null"
+                (click)="onConnectClick(p)"
+                [attr.aria-pressed]="p.connected"
+              >
+                <span *ngIf="!p.connected && !p.connecting">Connect</span>
                 <span *ngIf="p.connected">Connected</span>
-                <svg class="link-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l2-2a5 5 0 0 0-7.07-7.07l-1.29 1.3"/><path d="M14 11a5 5 0 0 0-7.54-.54l-2 2a5 5 0 0 0 7.07 7.07l1.29-1.3"/></svg>
+                <span *ngIf="p.connecting">Connecting</span>
+                <!-- Show chain icon when idle -->
+                <svg *ngIf="!p.connecting && !p.connected" class="link-icon" width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_connect_icon)">
+                    <path d="M2.82063 12.2126C4.39063 13.7076 6.26 13.1095 7.00813 12.5038C7.39438 12.1907 7.56875 11.9882 7.71812 11.8382C8.24125 11.3526 8.20812 10.8663 7.86812 10.4776C7.73125 10.322 6.85813 9.4832 6.02063 8.6232C5.58688 8.18945 5.28812 7.8832 5.03187 7.6357C4.69 7.29445 4.39063 6.9032 3.94188 6.91445C3.53063 6.91445 3.23188 7.27695 2.8575 7.65133C2.4275 8.08133 2.11 8.6232 1.99813 9.10945C1.66125 10.5301 2.185 11.5395 2.82063 12.2126ZM2.82063 12.2126L1.25 13.7826M12.1794 2.85508C10.6087 1.35883 8.74562 1.96758 7.99812 2.57383C7.61062 2.88758 7.43688 3.09008 7.28688 3.24008C6.76375 3.72633 6.79688 4.21258 7.1375 4.60133C7.18625 4.65758 7.33125 4.80133 7.53438 5.00383M12.1794 2.85508C12.815 3.5282 13.3456 4.54883 13.0087 5.9707C12.8962 6.45695 12.5787 6.99883 12.1487 7.42945C11.775 7.8032 11.4756 8.16633 11.0644 8.16633C10.6156 8.17758 10.3831 7.85258 10.04 7.51133M12.1794 2.85508L13.75 1.2832M7.53438 5.00383C7.8975 5.3632 8.44875 5.90508 8.985 6.45633C9.41875 6.89008 9.78375 7.26383 10.04 7.5107L9.06375 8.4632M7.53438 5.00383L6.57 5.97383" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_connect_icon">
+                      <rect width="15" height="15" fill="white" transform="translate(0 0.0332031)"/>
+                    </clipPath>
+                  </defs>
+                </svg>
+                <!-- Check icon when connected -->
+                <svg *ngIf="p.connected && !p.connecting" class="check-icon" width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3.125 7.53369L6.25 10.6587L12.5 4.40869" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <!-- Loading icon while connecting (provided SVG) -->
+                <svg *ngIf="p.connecting" class="loading-icon" width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path opacity="0.5" d="M7.5 1.28369C6.26387 1.28369 5.0555 1.65025 4.02769 2.33701C2.99988 3.02377 2.1988 3.99988 1.72576 5.14192C1.25271 6.28396 1.12894 7.54062 1.37009 8.75301C1.61125 9.96539 2.20651 11.079 3.08059 11.9531C3.95466 12.8272 5.06831 13.4224 6.28069 13.6636C7.49307 13.9048 8.74974 13.781 9.89178 13.3079C11.0338 12.8349 12.0099 12.0338 12.6967 11.006C13.3834 9.9782 13.75 8.76982 13.75 7.53369C13.75 6.71293 13.5883 5.9002 13.2743 5.14192C12.9602 4.38363 12.4998 3.69464 11.9194 3.11427C11.3391 2.53391 10.6501 2.07354 9.89178 1.75944C9.13349 1.44535 8.32076 1.28369 7.5 1.28369ZM7.5 12.5337C6.5111 12.5337 5.5444 12.2404 4.72215 11.691C3.89991 11.1416 3.25904 10.3607 2.88061 9.44711C2.50217 8.53348 2.40315 7.52814 2.59608 6.55824C2.789 5.58834 3.26521 4.69742 3.96447 3.99816C4.66373 3.2989 5.55465 2.82269 6.52455 2.62977C7.49446 2.43684 8.49979 2.53586 9.41342 2.91429C10.3271 3.29273 11.1079 3.93359 11.6574 4.75584C12.2068 5.57809 12.5 6.54479 12.5 7.53369C12.5 8.85977 11.9732 10.1315 11.0355 11.0692C10.0979 12.0069 8.82609 12.5337 7.5 12.5337Z" fill="white"/>
+                  <path d="M12.5 7.53369L13.75 7.53369C13.75 6.71293 13.5883 5.9002 13.2742 5.14192C12.9602 4.38363 12.4998 3.69464 11.9194 3.11427C11.3391 2.53391 10.6501 2.07354 9.89177 1.75944C9.13349 1.44535 8.32076 1.28369 7.5 1.28369V2.53369C8.82608 2.53369 10.0979 3.06048 11.0355 3.99816C11.9732 4.93584 12.5 6.20761 12.5 7.53369Z" fill="white"/>
+                </svg>
+              </button>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_connect_icon">
+                      <rect width="15" height="15" fill="white" transform="translate(0 0.0332031)"/>
+                    </clipPath>
+                  </defs>
+                </svg>
               </button>
               <button type="button" class="edit-btn" (click)="editPlatform(p)" [attr.aria-label]="'Edit ' + p.name + ' details'">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5Z"/></svg>

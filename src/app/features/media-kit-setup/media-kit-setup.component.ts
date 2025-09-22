@@ -26,7 +26,7 @@ import { NgFor, NgIf, NgClass, SlicePipe, DecimalPipe, NgTemplateOutlet } from '
  * - Cards and controls expose roles and labels for keyboard and screen-reader support.
  *
  * Rationale
- * - lastUpdatedStr is session-only (not persisted) to avoid churn in storage on every keystroke; the timeline is still visible to users.
+ * - lastUpdatedStr is session-only  lol. (not persisted) to avoid churn in storage on every keystroke; the timeline is still visible to users.
  * - Snapshot payload stores raw values (ids, booleans, text) to keep local storage small and robust to view/layout changes.
  */
 
@@ -164,10 +164,38 @@ import { NgFor, NgIf, NgClass, SlicePipe, DecimalPipe, NgTemplateOutlet } from '
               </div>
             </div>
             <div class="actions-row">
-              <button type="button" class="connect-btn" (click)="toggleConnect(p)" [attr.aria-pressed]="p.connected">
-                <span *ngIf="!p.connected">Connect</span>
+              <button
+                type="button"
+                class="connect-btn"
+                [class.connecting]="p.connecting"
+                [disabled]="p.connecting"
+                [attr.aria-busy]="p.connecting || null"
+                (click)="onConnectClick(p)"
+                [attr.aria-pressed]="p.connected"
+              >
+                <span *ngIf="!p.connected && !p.connecting">Connect</span>
                 <span *ngIf="p.connected">Connected</span>
-                <svg class="link-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l2-2a5 5 0 0 0-7.07-7.07l-1.29 1.3"/><path d="M14 11a5 5 0 0 0-7.54-.54l-2 2a5 5 0 0 0 7.07 7.07l1.29-1.3"/></svg>
+                <span *ngIf="p.connecting">Connecting</span>
+                <!-- Show chain icon when idle -->
+                <svg *ngIf="!p.connecting && !p.connected" class="link-icon" width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_connect_icon_ts)">
+                    <path d="M2.82063 12.2126C4.39063 13.7076 6.26 13.1095 7.00813 12.5038C7.39438 12.1907 7.56875 11.9882 7.71812 11.8382C8.24125 11.3526 8.20812 10.8663 7.86812 10.4776C7.73125 10.322 6.85813 9.4832 6.02063 8.6232C5.58688 8.18945 5.28812 7.8832 5.03187 7.6357C4.69 7.29445 4.39063 6.9032 3.94188 6.91445C3.53063 6.91445 3.23188 7.27695 2.8575 7.65133C2.4275 8.08133 2.11 8.6232 1.99813 9.10945C1.66125 10.5301 2.185 11.5395 2.82063 12.2126ZM2.82063 12.2126L1.25 13.7826M12.1794 2.85508C10.6087 1.35883 8.74562 1.96758 7.99812 2.57383C7.61062 2.88758 7.43688 3.09008 7.28688 3.24008C6.76375 3.72633 6.79688 4.21258 7.1375 4.60133C7.18625 4.65758 7.33125 4.80133 7.53438 5.00383M12.1794 2.85508C12.815 3.5282 13.3456 4.54883 13.0087 5.9707C12.8962 6.45695 12.5787 6.99883 12.1487 7.42945C11.775 7.8032 11.4756 8.16633 11.0644 8.16633C10.6156 8.17758 10.3831 7.85258 10.04 7.51133M12.1794 2.85508L13.75 1.2832M7.53438 5.00383C7.8975 5.3632 8.44875 5.90508 8.985 6.45633C9.41875 6.89008 9.78375 7.26383 10.04 7.5107L9.06375 8.4632M7.53438 5.00383L6.57 5.97383" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_connect_icon_ts">
+                      <rect width="15" height="15" fill="white" transform="translate(0 0.0332031)"/>
+                    </clipPath>
+                  </defs>
+                </svg>
+                <!-- Check icon when connected -->
+                <svg *ngIf="p.connected && !p.connecting" class="check-icon" width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3.125 7.53369L6.25 10.6587L12.5 4.40869" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <!-- Loading icon while connecting (provided SVG) -->
+                <svg *ngIf="p.connecting" class="loading-icon" width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path opacity="0.5" d="M7.5 1.28369C6.26387 1.28369 5.0555 1.65025 4.02769 2.33701C2.99988 3.02377 2.1988 3.99988 1.72576 5.14192C1.25271 6.28396 1.12894 7.54062 1.37009 8.75301C1.61125 9.96539 2.20651 11.079 3.08059 11.9531C3.95466 12.8272 5.06831 13.4224 6.28069 13.6636C7.49307 13.9048 8.74974 13.781 9.89178 13.3079C11.0338 12.8349 12.0099 12.0338 12.6967 11.006C13.3834 9.9782 13.75 8.76982 13.75 7.53369C13.75 6.71293 13.5883 5.9002 13.2743 5.14192C12.9602 4.38363 12.4998 3.69464 11.9194 3.11427C11.3391 2.53391 10.6501 2.07354 9.89178 1.75944C9.13349 1.44535 8.32076 1.28369 7.5 1.28369ZM7.5 12.5337C6.5111 12.5337 5.5444 12.2404 4.72215 11.691C3.89991 11.1416 3.25904 10.3607 2.88061 9.44711C2.50217 8.53348 2.40315 7.52814 2.59608 6.55824C2.789 5.58834 3.26521 4.69742 3.96447 3.99816C4.66373 3.2989 5.55465 2.82269 6.52455 2.62977C7.49446 2.43684 8.49979 2.53586 9.41342 2.91429C10.3271 3.29273 11.1079 3.93359 11.6574 4.75584C12.2068 5.57809 12.5 6.54479 12.5 7.53369C12.5 8.85977 11.9732 10.1315 11.0355 11.0692C10.0979 12.0069 8.82609 12.5337 7.5 12.5337Z" fill="white"/>
+                  <path d="M12.5 7.53369L13.75 7.53369C13.75 6.71293 13.5883 5.9002 13.2742 5.14192C12.9602 4.38363 12.4998 3.69464 11.9194 3.11427C11.3391 2.53391 10.6501 2.07354 9.89177 1.75944C9.13349 1.44535 8.32076 1.28369 7.5 1.28369V2.53369C8.82608 2.53369 10.0979 3.06048 11.0355 3.99816C11.9732 4.93584 12.5 6.20761 12.5 7.53369Z" fill="white"/>
+                </svg>
               </button>
               <button type="button" class="edit-btn" (click)="editPlatform(p)" [attr.aria-label]="'Edit ' + p.name + ' details'">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5Z"/></svg>
@@ -596,8 +624,40 @@ import { NgFor, NgIf, NgClass, SlicePipe, DecimalPipe, NgTemplateOutlet } from '
       </div>
     </div>
   </div>
-
-  <!-- Modal removed; navigation used instead -->
+  
+  <!-- Manual Stat Upload Modal -->
+  <div *ngIf="editOpen" class="modal-overlay" (keydown)="onModalKeydown($event)">
+    <div class="modal-backdrop" (click)="closeManualModal()" aria-hidden="true"></div>
+    <div class="modal" role="dialog" aria-modal="true" [attr.aria-labelledby]="'manualStatTitle'">
+      <div class="modal-head">
+        <h3 class="modal-title" id="manualStatTitle">Manual Stat Upload - {{ modalPlatform?.name }}</h3>
+        <button type="button" class="icon-btn close" (click)="closeManualModal()" aria-label="Close">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form class="modal-body" [formGroup]="manualStatsForm" (ngSubmit)="saveManualStats()">
+        <label class="field">
+          <span>What is your follower count ?</span>
+          <input type="text" formControlName="followers" placeholder="Enter total number of followers" autofocus />
+          <small class="err" *ngIf="manualTouched && manualStatsForm.controls.followers.invalid">Enter a number (e.g., 12500 or 12.5k)</small>
+        </label>
+        <label class="field">
+          <span>What is your average  engagement rate ?</span>
+          <input type="text" formControlName="engagementRate" placeholder="Enter rate" />
+          <small class="err" *ngIf="manualTouched && manualStatsForm.controls.engagementRate.invalid">Enter a percent (e.g., 3.8 or 3.8%)</small>
+        </label>
+        <label class="field">
+          <span>What is your average views per post ?</span>
+          <input type="text" formControlName="avgViews" placeholder="Enter rate" />
+          <small class="err" *ngIf="manualTouched && manualStatsForm.controls.avgViews.invalid">Enter a number (e.g., 8100 or 8.1k)</small>
+        </label>
+        <div class="modal-actions">
+          <button type="button" class="btn ghost" (click)="closeManualModal()">Cancel</button>
+          <button type="submit" class="btn primary">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
   `,
   styleUrls: ['./media-kit-setup.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -630,7 +690,8 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
   openAudience = false;
   openLanguages = false;
   // Social platforms list; iconSafe is computed on init with DomSanitizer to render SVG safely
-  platforms: Array<{ id:string; name:string; labelLower:string; connected:boolean; icon:string; iconSafe?: SafeHtml }> = [
+  // connecting?: transient flag while establishing connection
+  platforms: Array<{ id:string; name:string; labelLower:string; connected:boolean; connecting?: boolean; icon:string; iconSafe?: SafeHtml }> = [
   { id:'tiktok', name:'Tiktok', labelLower:'tiktok', connected:false, icon:`<svg width="40" height="45" viewBox="0 0 40 45" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_184_3697)">
 <path d="M29.6447 16.2037C32.5631 18.2744 36.1384 19.4928 39.9998 19.4928V12.1175C39.269 12.1178 38.5401 12.0421 37.8252 11.8916V17.697C33.9641 17.697 30.3892 16.4788 27.4702 14.4082V29.4593C27.4702 36.9887 21.3208 43.0919 13.7358 43.0919C10.9056 43.0919 8.275 42.2427 6.08984 40.7861C8.58391 43.3174 12.062 44.8876 15.9098 44.8876C23.4955 44.8876 29.645 38.7843 29.645 31.2546V16.2037H29.6447ZM32.3275 8.76283C30.8359 7.14547 29.8566 5.0553 29.6447 2.74447V1.7959H27.5839C28.1027 4.73285 29.8722 7.24199 32.3275 8.76283ZM10.8873 35.0084C10.054 33.924 9.60351 32.5972 9.60562 31.233C9.60562 27.7895 12.4183 24.9973 15.8884 24.9973C16.535 24.9969 17.1778 25.0955 17.7942 25.2895V17.7492C17.0739 17.6513 16.347 17.6095 15.6205 17.6249V23.4938C15.0038 23.2998 14.3607 23.2013 13.7137 23.2018C10.2437 23.2018 7.43125 25.9936 7.43125 29.4377C7.43125 31.873 8.83703 33.9813 10.8873 35.0084Z" fill="#FF004F"/>
@@ -723,6 +784,15 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
   // Progress / last updated
   progressTotal = 7;
   lastUpdatedStr: string | null = null;
+  // Manual Stat Upload modal state
+  editOpen = false;
+  modalPlatform: { id:string; name:string } | null = null;
+  manualTouched = false;
+  manualStatsForm = new FormBuilder().group({
+    followers: ['', [Validators.required, Validators.pattern(/^[0-9]+(\.[0-9]+)?([kKmM])?$/)]],
+    engagementRate: ['', [Validators.pattern(/^[0-9]+(\.[0-9]+)?%?$/)]],
+    avgViews: ['', [Validators.pattern(/^[0-9]+(\.[0-9]+)?([kKmM])?$/)]]
+  });
 
   /**
    * Lifecycle: initialize component state.
@@ -900,8 +970,57 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
   toggleLanguages(){ this.openLanguages = !this.openLanguages; this.openAudience = false; }
   selectAudience(val: string){ this.form.patchValue({ audienceBase: val }); this.openAudience = false; }
   selectLanguage(val: string){ this.form.patchValue({ languages: val }); this.openLanguages = false; }
-  toggleConnect(p: any){ p.connected = !p.connected; }
-  editPlatform(p: any){ /* TODO: open edit modal */ }
+  /**
+   * Handle connect button with a temporary "Connecting" state.
+   * - If already connecting, ignore clicks
+   * - If connected, clicking toggles to disconnected immediately
+   * - If disconnected, set connecting for ~1.6s then mark as connected
+   */
+  onConnectClick(p: any){
+    if (p.connecting) return;
+    if (p.connected){ p.connected = false; return; }
+    p.connecting = true;
+    setTimeout(() => { p.connecting = false; p.connected = true; }, 1600);
+  }
+  // Back-compat: if any template still calls toggleConnect
+  toggleConnect(p: any){ this.onConnectClick(p); }
+  /**
+   * Open the Manual Stat Upload modal for the chosen platform.
+   */
+  editPlatform(p: any){
+    this.modalPlatform = { id: p.id, name: p.name };
+    this.manualStatsForm.reset();
+    this.manualTouched = false;
+    this.editOpen = true;
+  }
+  /** Close modal without saving */
+  closeManualModal(){ this.editOpen = false; this.modalPlatform = null; }
+  /** Handle ESC key inside modal */
+  onModalKeydown(ev: KeyboardEvent){ if(ev.key === 'Escape'){ ev.stopPropagation(); this.closeManualModal(); } }
+  /** Save entered stats (followers -> preview metric). */
+  saveManualStats(){
+    this.manualTouched = true;
+    if(this.manualStatsForm.invalid || !this.modalPlatform){ return; }
+    const followersRaw = String(this.manualStatsForm.value.followers || '').trim();
+    // Preserve k/M suffix if provided; otherwise format to compact display
+    const formatted = this.formatCompactNumber(followersRaw);
+    this.platformMetrics[this.modalPlatform.id] = formatted;
+    this.closeManualModal();
+  }
+  /** Format plain numbers like 12500 -> 12.5k; keep existing k/m suffixes */
+  private formatCompactNumber(input: string): string {
+    if(/([kKmM])$/.test(input)){
+      // normalize suffix to lowercase (k/m)
+      const num = input.replace(/([kKmM])$/, (_, s) => s.toLowerCase());
+      return num;
+    }
+    const n = parseFloat(input);
+    if(isNaN(n)) return input;
+    const abs = Math.abs(n);
+    if(abs >= 1_000_000) return (n/1_000_000).toFixed(n % 1_000_000 === 0 ? 0 : 1).replace(/\.0$/, '') + 'm';
+    if(abs >= 1_000) return (n/1_000).toFixed(n % 1_000 === 0 ? 0 : 1).replace(/\.0$/, '') + 'k';
+    return String(n);
+  }
   toggleBrands(){ this.openBrands = !this.openBrands; }
   selectBrand(b: string){ this.collabForm.patchValue({ brand: b }); this.openBrands = false; }
   /**
