@@ -1,4 +1,4 @@
-/* Rates & Services — match Figma */
+/* Rates & Services — visual alignment per design spec */
 .rates-step {
   /* Charging rate options */
   .rate-options { list-style:none; margin:.25rem 0 .9rem; padding:0; }
@@ -50,11 +50,11 @@
     .amount-row .amount-field { flex:0 0 100%; }
   }
 }
-/* Collaborations: brands dropdown highlight per Figma */
+/* Collaborations: brands dropdown highlight per design spec */
 .collab-step {
   .dropdown-panel {
     li {
-      border-radius: 8px; /* soft pill look from Figma */
+  border-radius: 8px; /* soft pill look per design */
       transition: background-color .15s ease;
     }
     li:hover,
@@ -74,14 +74,14 @@
 @media (max-width: 480px){
   .mk-setup-wrapper { padding: 1rem .8rem 2rem; }
 }
-/* Main stepper container uses the new dashboard-like card style and Figma dimensions */
+/* Main stepper container: dashboard-like card style and specified dimensions */
 .wizard-card {
   width:100%;
-  max-width:1512px; /* Figma width */
+  max-width:1512px; /* design width */
   min-height:550px; /* Reduced height for a more compact view */
   background:#fff;
-  border:1px solid #e2e8f0; /* Figma border-width: 1px */
-  border-radius:16px; /* Figma radius */
+  border:1px solid #e2e8f0; /* border-width: 1px as specified */
+  border-radius:16px; /* corner radius as specified */
   padding:1.35rem 1.9rem 2.2rem;
   font-family:Inter,system-ui,sans-serif;
   position:relative;
@@ -123,7 +123,7 @@
 .steps li.completed .connector { background:var(--color-primary); }
 .steps li.clickable { cursor:pointer; }
 .steps li.clickable:hover .circle { filter:brightness(.92); }
-/* Optical spacing tweak: extra breathing room before step 4 (Rates & Services) */
+/* Stepper layout: provide additional spacing before step 4 (Rates & Services) */
 .steps li:nth-child(3) .connector-space { width:calc(var(--after-connector-gap) + var(--circle-buffer) + 3px); flex-basis:calc(var(--after-connector-gap) + var(--circle-buffer) + 3px); }
 /* If further adjustment needed, increase the + 3px above by 1px increments. */
 
@@ -252,9 +252,9 @@
 
 /* Socials & Stats */
 .socials-step { padding:1rem 0 0; }
-.platform-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:1.1rem 1.85rem; }
-@media (max-width:1200px){ .platform-grid { grid-template-columns:repeat(3, 1fr); } }
-@media (max-width:900px){ .platform-grid { grid-template-columns:repeat(2, 1fr); } }
+.platform-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:1.1rem 1.25rem; }
+@media (max-width:1280px){ .platform-grid { grid-template-columns:repeat(3, 1fr); } }
+@media (max-width:1024px){ .platform-grid { grid-template-columns:repeat(2, 1fr); } }
 @media (max-width:640px){ .platform-grid { grid-template-columns:1fr; } }
 @media (max-width:480px){
   .platform-card { padding:.6rem .7rem .55rem; }
@@ -262,8 +262,8 @@
   .connect-btn { padding:.32rem .6rem .29rem; }
 }
 /* Stepper cards use the new card style */
-.platform-card { border:1px solid #ff9c40; border-radius:12px; padding:.7rem .85rem .65rem; background:#fff; position:relative; display:flex; flex-direction:column; min-height:96px; box-shadow:0 2px 4px -2px rgba(0,0,0,0.06), 0 4px 12px -2px rgba(0,0,0,0.08); transition: border-color .18s ease, box-shadow .18s ease; }
-/* Hover look per mock: subtle primary-orange outline glow */
+.platform-card { border:1px solid #ff9c40; border-radius:12px; padding:.7rem .85rem .65rem; background:#fff; position:relative; display:flex; flex-direction:column; min-height:96px; box-shadow:0 2px 4px -2px rgba(0,0,0,0.06), 0 4px 12px -2px rgba(0,0,0,0.08); transition: border-color .18s ease, box-shadow .18s ease; min-width:0; }
+/* Hover state: subtle primary-orange outline glow */
 .platform-card:hover { border-color:#ff7a00; box-shadow:0 0 0 1px rgba(255,122,0,0.25), 0 6px 14px -4px rgba(0,0,0,0.12); }
 .platform-card .top-row { display:flex; align-items:flex-start; gap:.55rem; }
 .platform-card .icon { width:28px; height:28px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
@@ -277,7 +277,7 @@
 .platform-card .actions-row .edit-btn { margin-left:auto; padding:.35rem; }
 .connect-btn { font-size:.48rem; background:#fff; border:1px solid #ff9c40; color:#ff7a00; padding:.35rem .65rem .32rem; border-radius:999px; display:inline-flex; align-items:center; gap:.3rem; cursor:pointer; font-weight:500; transition: background .15s ease, color .15s ease, border-color .15s ease, box-shadow .15s ease; }
 .connect-btn .link-icon { color:#ff7a00; }
-/* Hover per mock: light grey pill look */
+/* Hover state: light grey pill look */
 .connect-btn:hover { background:#f2f2f2; color:#333; border-color:#e1e1e1; box-shadow:0 1px 2px rgba(0,0,0,0.06) inset; }
 .connect-btn:hover .link-icon { color:#555; }
 .connect-btn:active { background:#e9e9e9; }
@@ -293,12 +293,12 @@
 
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 .platform-card.connected { border-color:#ff7a00; box-shadow:0 0 0 1px rgba(255,122,0,0.18), 0 2px 8px rgba(255,122,0,0.12); }
-/* Connected pill per pasted image: black background with white text and check */
+/* Connected pill: black background with white text and check icon */
 .platform-card.connected .connect-btn { background:#111; border-color:#111; color:#fff; }
 .platform-card.connected .connect-btn .link-icon { display:none; }
 .platform-card.connected .connect-btn .check-icon { display:inline-block; color:#fff; }
 .platform-card.connected .hint { color:#8aa; }
-/* Keep the platform name dark like in screenshot; card border remains orange */
+/* Keep platform name dark; card border remains orange */
 .platform-card.connected .name { color:#1d1d1d; }
 .platform-card.connected .edit-btn { color:#a24cc5; }
 

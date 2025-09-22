@@ -52,7 +52,7 @@
 
           </div>
           <div class="id-block"> 
-            <div class="name">John Doe</div>
+            <div class="name">{{ (form.value.firstName || '').trim() }} {{ (form.value.lastName || '').trim() }}</div>
             <div class="role">Creator</div>
           </div>
         </div>

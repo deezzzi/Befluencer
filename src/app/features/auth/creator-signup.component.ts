@@ -106,9 +106,14 @@ export class CreatorSignupComponent {
   /** Handle submit: persist email and proceed to OTP. */
   onSubmit() {
     if (this.form.valid) {
-      const email = this.form.value.email as string;
-      // Persist email for OTP screen fallback (e.g., page refresh)
+      const { firstName, lastName, email } = this.form.value as { firstName: string; lastName: string; email: string };
+      // Persist essentials for downstream flows (OTP + greeting)
       this.storage.setJSON('auth:email', email);
+      const displayName = `${(firstName || '').trim()} ${(lastName || '').trim()}`.trim();
+      if (displayName) {
+        this.storage.setJSON('profile:displayName', displayName);
+        this.storage.setJSON('auth:user', { firstName, lastName, email, displayName });
+      }
       this.router.navigate(['/auth/otp'], { state: { email } });
     } else {
       this.form.markAllAsTouched();

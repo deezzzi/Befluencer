@@ -26,7 +26,7 @@ import { NgFor, NgIf, NgClass, SlicePipe, DecimalPipe, NgTemplateOutlet } from '
  * - Cards and controls expose roles and labels for keyboard and screen-reader support.
  *
  * Rationale
- * - lastUpdatedStr is session-only  lol. (not persisted) to avoid churn in storage on every keystroke; the timeline is still visible to users.
+ * - lastUpdatedStr is session-only (not persisted) to avoid churn in storage on every keystroke; the timeline remains visible to users.
  * - Snapshot payload stores raw values (ids, booleans, text) to keep local storage small and robust to view/layout changes.
  */
 
@@ -89,7 +89,7 @@ import { NgFor, NgIf, NgClass, SlicePipe, DecimalPipe, NgTemplateOutlet } from '
 
           </div>
           <div class="id-block"> 
-            <div class="name">John Doe</div>
+            <div class="name">{{ (form.value.firstName || '').trim() }} {{ (form.value.lastName || '').trim() }}</div>
             <div class="role">Creator</div>
           </div>
         </div>
@@ -668,7 +668,7 @@ export class MediaKitSetupComponent implements OnInit, OnDestroy {
   steps = [
     { label: 'Basic Information', desc: 'Tell us about yourself.' },
   { label: 'Socials & Stat', desc: 'Connect to your social<br>media accounts.' },
-    { label: 'Collaborations', desc: 'Add your previous<br> experiences with brands.' },
+    { label: 'Previous Collaborations', desc: 'Add your previous<br> experiences with brands.' },
     { label: 'Rates & Services', desc: 'Describe your services and <br>how you will like to be paid.' },
     { label: 'Contact Info', desc: 'How can brands reach you?' },
     { label: 'Preview', desc: 'You are all done. Review<br> and select your preferred <br>theme.' }

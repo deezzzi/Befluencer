@@ -16,7 +16,7 @@ interface StatCard { title: string; value: string; diff?: number; }
   <div class="space-y-4 md:space-y-6">
     <section>
       <!-- <h2 class="text-xl font-semibold mb-4">Key Metrics</h2> -->
-      <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+  <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4 lg:grid-cols-3">
         <div *ngFor="let c of cards" class="rounded-xl p-3 md:p-4 bg-white dark:bg-gray-900 shadow-card border border-slate-100 dark:border-gray-700 flex flex-col gap-1">
           <div class="text-xs uppercase tracking-wide text-slate-500 dark:text-gray-400">{{ c.title }}</div>
           <div class="text-xl md:text-2xl font-semibold">{{ c.value }}</div>
@@ -27,8 +27,8 @@ interface StatCard { title: string; value: string; diff?: number; }
       </div>
     </section>
     <!-- Row 2: Three columns: Line chart | Channels | Audience -->
-    <section class="grid gap-6 lg:grid-cols-3">
-      <div class="rounded-xl border border-slate-100 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-card min-h-[240px] md:min-h-[280px]">
+  <section class="grid gap-4 sm:gap-5 lg:gap-6 lg:grid-cols-3">
+  <div class="rounded-xl border border-slate-100 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-card min-h-[200px] md:min-h-[240px]">
         <div class="flex items-center justify-between mb-4">
           <h3 class="font-semibold">Traffic overview</h3>
           <div class="text-xs text-slate-500">This year vs Last year</div>
@@ -37,7 +37,7 @@ interface StatCard { title: string; value: string; diff?: number; }
           <span class="text-xs text-slate-400">Line chart placeholder</span>
         </div>
       </div>
-      <div class="rounded-xl border border-slate-100 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-card">
+  <div class="rounded-xl border border-slate-100 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-card">
         <h4 class="font-medium mb-4">Channels</h4>
         <ul class="space-y-2 text-sm">
           <li class="flex items-center gap-3"><span class="inline-block h-2 w-6 rounded bg-rose-500"></span> TikTok</li>
@@ -47,7 +47,7 @@ interface StatCard { title: string; value: string; diff?: number; }
           <li class="flex items-center gap-3"><span class="inline-block h-2 w-6 rounded bg-emerald-500"></span> Facebook</li>
         </ul>
       </div>
-      <div class="rounded-xl border border-slate-100 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-card">
+  <div class="rounded-xl border border-slate-100 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-card">
         <h4 class="font-medium mb-4">Audience by country</h4>
         <div class="flex items-center gap-6">
           <div class="w-24 h-24 md:w-28 md:h-28 rounded-full bg-[conic-gradient(var(--tw-gradient-stops))] from-rose-500 via-orange-400 via-amber-400 via-emerald-500 to-violet-500"></div>
@@ -62,8 +62,8 @@ interface StatCard { title: string; value: string; diff?: number; }
     </section>
 
     <!-- Row 3: Bar chart (2 cols) + Right column activity list -->
-    <section class="grid gap-6 lg:grid-cols-3">
-      <div class="lg:col-span-2 rounded-xl border border-slate-100 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-card min-h-[240px] md:min-h-[280px]">
+  <section class="grid gap-4 sm:gap-5 lg:gap-6 lg:grid-cols-3">
+  <div class="lg:col-span-2 rounded-xl border border-slate-100 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-card min-h-[200px] md:min-h-[260px]">
         <div class="flex items-center justify-between mb-4">
           <h3 class="font-semibold">Weekly performance</h3>
           <div class="text-xs text-slate-500">Lorem 1 vs Lorem 2</div>
@@ -72,7 +72,7 @@ interface StatCard { title: string; value: string; diff?: number; }
           <span class="text-xs text-slate-400">Bar chart placeholder</span>
         </div>
       </div>
-      <div class="rounded-xl border border-slate-100 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-card min-h-[240px] md:min-h-[280px]">
+  <div class="rounded-xl border border-slate-100 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-card min-h-[200px] md:min-h-[260px]">
         <div class="flex items-center justify-between mb-4">
           <h4 class="font-medium">Recent activity</h4>
           <span class="text-xs text-slate-500">23 – 30 March 2020</span>

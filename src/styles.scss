@@ -1,3 +1,6 @@
+/* Shared responsive utilities (must come before any other rules for Sass) */
+@use './styles/responsive' as *;
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

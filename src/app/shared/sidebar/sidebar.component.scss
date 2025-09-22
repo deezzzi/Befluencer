@@ -3,6 +3,11 @@
 .sidebar--collapsed { width: 72px; }
 .sidebar--expanded { width: 240px; }
 
+/* Small screens: collapse by default and overlay behavior could be added in the future */
+@media (max-width: 768px) {
+  .sidebar { width: 72px; }
+}
+
 /* Tooltip shown only when collapsed */
 .sidebar--collapsed .nav-item { position: relative; }
 .sidebar-tooltip {
