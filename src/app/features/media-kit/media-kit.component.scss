@@ -5,26 +5,29 @@
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 2.5rem 2rem 4rem;
+  /* Match setup page outer padding density */
+  padding: 1.8rem 1.6rem 3rem;
   overflow-y: auto;
 }
 
 .empty-card {
-  --card-border: #e5e5e5;
-  background: #fafafa;
+  /* Align with wizard-card styling so both cards feel identical */
+  --card-border: #e2e8f0;
+  background: #fff;
   width: 100%;
-  max-width: 920px;
-  min-height: 520px;
+  max-width: 1512px; /* same as setup wizard-card */
+  min-height: 550px; /* match wizard-card */
   border: 1px solid var(--card-border);
-  border-radius: 14px;
+  border-radius: 16px; /* match wizard-card */
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 4.5rem 2rem 3.5rem;
+  padding: 1.35rem 1.9rem 2.2rem; /* match wizard-card padding */
   text-align: center;
   font-family: Inter, system-ui, sans-serif;
   position: relative;
+  box-shadow: 0 2px 4px -2px rgba(0,0,0,0.06), 0 4px 12px -2px rgba(0,0,0,0.08);
 }
 
 .icon-stack { margin-bottom: 1.25rem; }
@@ -71,7 +74,8 @@
 .setup-btn .plus { font-weight: 600; font-size: 0.75rem; line-height: 1; }
 
 @media (max-width: 640px) {
-  .empty-card { padding: 3.5rem 1.25rem 2.5rem; min-height: 460px; }
+  /* Keep a comfortable compact layout on small screens */
+  .empty-card { padding: 0.9rem 0.9rem 1.2rem; min-height: 460px; border-radius: 12px; }
   .desc { font-size: 0.68rem; }
   .setup-btn { font-size: 0.6rem; }
 }

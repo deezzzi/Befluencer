@@ -64,15 +64,5 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
 
-## Onboarding overlay (dashboard)
-
-An onboarding "Tour" can appear ~5 seconds after the dashboard loads (first visit only). It is implemented as a shared overlay with four steps:
-
-- Step 1: Centered welcome modal with blurred backdrop
-- Step 2: Tooltip for Notifications (bell)
-- Step 3: Tooltip for Profile
-- Step 4: Tooltip for Side Panel (final, with Close)
-
-Only Step 1 applies a blurred/dimmed backdrop; Steps 2–4 are anchored tooltips without blur. Code lives in `src/app/shared/onboarding/`.
 
 For detailed behavior, anchors, and extension guidance, see `documentation.md`.

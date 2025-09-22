@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
   standalone: true,
   template: `
   <div class="media-kit-wrapper">
-    <div class="empty-card" style="box-shadow:0 2px 4px -2px rgba(0,0,0,0.06), 0 4px 12px -2px rgba(0,0,0,0.08); ;">
+    <div class="empty-card">
       <div class="icon-stack" aria-hidden="true">
         <!-- <svg class="main" width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="34" y="34" width="52" height="52" rx="6" stroke="#b0b0b0" stroke-width="2" fill="#fff" />
