@@ -1,5 +1,5 @@
 /* Layout widths */
-.sidebar { width: 240px; font-family: "Inter", system-ui, sans-serif; }
+.sidebar { width: 240px; font-family: "Poppins", system-ui, sans-serif; }
 .sidebar--collapsed { width: 72px; }
 .sidebar--expanded { width: 240px; }
 
@@ -36,7 +36,7 @@
 }
 
 /* Nav links */
-.nav-link { position: relative; }
+.nav-link { position: relative; font-family: "Poppins", system-ui, sans-serif; font-size: 18px; font-weight: 500; line-height: 100%; letter-spacing: 0; }
 
 /* Active pill (routerLinkActive adds .nav-active) */
 .nav-active { background: #ff7a00; color: #fff !important; box-shadow: 0 2px 4px rgba(255,122,0,0.25); }
@@ -50,3 +50,6 @@
 
 /* Active indicator visibility */
 /* Remove legacy indicator styles */
+
+/* Brand image sizing */
+.logo-icon img { display:block; }

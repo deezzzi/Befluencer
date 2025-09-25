@@ -20,21 +20,46 @@
 .brand { max-width:720px; width:100%; padding-left:6vw; }
 .logo { display:flex; align-items:center; gap:1.25rem; font-weight:800; letter-spacing:.2px; }
 .logo .b { display:inline-block; width:112px; height:112px; border-radius:28px; background:linear-gradient(135deg,#FF6A00,#9C27B0); color:#fff; font-size:74px; line-height:112px; text-align:center; font-weight:900; filter: drop-shadow(0 6px 20px rgba(128,0,128,.15)); }
+.logo .mark { width:112px; height:112px; border-radius:28px; display:inline-block; object-fit:cover; filter: drop-shadow(0 6px 20px rgba(128,0,128,.15)); }
+.logo .mark.full { width:auto; height:112px; border-radius:12px; object-fit:contain; filter:none; box-shadow:none; }
 .logo .word { font-size:72px; color:#111; font-weight:800; }
-.tagline { margin-top:.4rem; font-size:28px; color:#444; font-weight:600; padding-left:calc(112px + 1.25rem); }
+.tagline { display:none; }
 
 /* subtle bg icons bottom-left to mimic mock */
 .left::after { content:""; position:absolute; left:2.25rem; bottom:1.5rem; width:220px; height:160px; background:radial-gradient(closest-side, rgba(0,0,0,.04), transparent 70%); opacity:.5; border-radius:24px; filter:blur(12px); }
 
-.right-content { width:100%; max-width:520px; margin-top:18vh; text-align:center; margin-left:auto; margin-right:auto; }
-.welcome { margin:0 0 .35rem; font-size:28px; font-weight:800; color:#111; text-align:center; }
-.login { color:#555; margin-bottom:1.2rem; text-align:center; }
+.right-content { width:100%; max-width:520px; margin-top:18vh; text-align:left; margin-left:auto; margin-right:auto; }
+.welcome {
+  margin:0 0 .35rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight:600; /* SemiBold */
+  font-style: normal;
+  font-size:32px;
+  line-height:56px; /* per spec */
+  letter-spacing:0;
+  vertical-align:middle;
+  color:#111;
+  text-align:left;
+  display:inline-block; /* shrink to text for accurate width measurement */
+}
+.login { color:#555; margin-bottom:1.2rem; text-align:left; }
 .login a { color:#6b2acb; text-decoration:none; font-weight:600; }
 .login a:hover { text-decoration:underline; }
-.iam { color:#666; margin:.75rem 0 .6rem; font-weight:600; text-align:center; }
+.iam {
+  color:#666;
+  margin:.75rem 0 .6rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight:600; /* SemiBold */
+  font-style: normal;
+  font-size:16px;
+  line-height:100%;
+  letter-spacing:0;
+  vertical-align:middle;
+  text-align:center;
+}
 
-.role-buttons { display:flex; gap:1.5rem; margin:.3rem 0 1.1rem; justify-content:center; }
-.btn { border-radius:999px; padding:0 1.2rem; font-weight:600; cursor:pointer; font-size:.95rem; background:#fff; width:200px; height:48px; display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; }
+.role-buttons { display:flex; gap:10px; margin:.3rem 0 1.1rem; justify-content:space-between; }
+.btn { border-radius:120px; padding:12px 6px; font-weight:600; cursor:pointer; font-size:.95rem; background:#fff; width:204px; height:51px; display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; border-width:2px; border-style:solid; transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; opacity:1; }
 .btn.creator { border:2px solid #ff7a00; color:#111; }
 .btn.creator:hover { background:#ff7a00; color:#fff; border-color:#ff7a00; box-shadow:0 6px 16px -6px rgba(255,122,0,.5); }
 .btn.brand { border:2px solid #9b6ad4; color:#111; }
@@ -51,5 +76,7 @@
   .right-content { margin-top:8vh; max-width:92%; }
   .logo .word { font-size:46px; }
   .logo .b { width:74px; height:74px; font-size:46px; line-height:74px; border-radius:20px; }
-  .tagline { font-size:18px; padding-left:calc(74px + 1rem); }
+  .logo .mark { width:74px; height:74px; border-radius:20px; }
+  .logo .mark.full { height:74px; }
+  .tagline { display:none; }
 }

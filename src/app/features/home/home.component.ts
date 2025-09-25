@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, AfterViewInit, ElementRef, ViewChild, HostListener, ChangeDetectorRef } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIf, NgFor } from '@angular/common';
 
@@ -16,10 +16,8 @@ import { NgIf, NgFor } from '@angular/common';
       <div class="left">
         <div class="brand">
           <div class="logo">
-            <span class="b">B</span>
-            <span class="word">Befluencer</span>
+            <img class="mark full" src="/logo.PNG" alt="Befluencer logo" />
           </div>
-          <div class="tagline">Be seen. Be paid.</div>
         </div>
       </div>
       <div class="right">
@@ -37,10 +35,10 @@ import { NgIf, NgFor } from '@angular/common';
         </div>
 
         <div class="right-content" role="main">
-          <h1 class="welcome">Welcome to our ecosystem!</h1>
+          <h1 class="welcome" #welcomeEl>Welcome to our ecosystem!</h1>
           <div class="login">Already have an account? <a routerLink="/login">Log in</a></div>
           <div class="iam">I am a</div>
-          <div class="role-buttons">
+          <div class="role-buttons" [style.width.px]="welcomeWidth">
             <button class="btn creator" routerLink="/signup/creator">Creator</button>
             <button class="btn brand">Brand</button>
           </div>
@@ -54,7 +52,9 @@ import { NgIf, NgFor } from '@angular/common';
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent {
+export class HomeComponent implements AfterViewInit {
+  @ViewChild('welcomeEl') welcomeEl!: ElementRef<HTMLElement>;
+  welcomeWidth = 0;
   openLang = false;
   languages = ['English UK','Français','Español','Deutsch','中文'];
   selectedLanguage = this.languages[0];
@@ -67,5 +67,24 @@ export class HomeComponent {
   selectLang(l: string){
     this.selectedLanguage = l;
     this.openLang = false;
+  }
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  ngAfterViewInit(): void {
+    this.updateWidths();
+  }
+
+  @HostListener('window:resize')
+  onResize(){
+    this.updateWidths();
+  }
+
+  private updateWidths(){
+    if (this.welcomeEl?.nativeElement) {
+      // Measure the actual text width by ensuring the element can shrink to content width via CSS
+      this.welcomeWidth = Math.ceil(this.welcomeEl.nativeElement.getBoundingClientRect().width);
+      this.cdr.markForCheck();
+    }
   }
 }

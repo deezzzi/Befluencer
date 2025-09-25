@@ -32,8 +32,7 @@ import { Router, RouterLink } from '@angular/router';
         <div class="topbar">
           <a class="back-link" routerLink="/">&larr; Back</a>
           <div class="mini-logo">
-            <span class="b">B</span>
-            <span class="name">Befluencer</span>
+            <img class="mark" src="/logo-ds.PNG" alt="Befluencer logo" />
           </div>
         </div>
 

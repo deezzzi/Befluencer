@@ -20,18 +20,15 @@ function passwordsMatch(group: AbstractControl): ValidationErrors | null {
       <div class="left purple">
         <div class="brand">
           <div class="logo">
-            <span class="b">B</span>
-            <span class="word">Befluencer</span>
+            <img class="mark full" src="/logo.PNG" alt="Befluencer logo" />
           </div>
-          <div class="tagline">Be seen. Be paid.</div>
         </div>
       </div>
       <div class="right">
         <div class="topbar">
           <a class="back-link" routerLink="/auth/forgot">&larr; Back</a>
           <div class="mini-logo">
-            <span class="b">B</span>
-            <span class="name">Befluencer</span>
+            <img class="mark" src="/logo-ds.PNG" alt="Befluencer logo" />
           </div>
         </div>
 
