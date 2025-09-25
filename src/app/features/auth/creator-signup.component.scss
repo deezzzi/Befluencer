@@ -114,10 +114,9 @@ form { display:flex; flex-direction:column; gap:0; }
 .divider span { font-weight:700; letter-spacing:.1em; font-size:.85rem; }
 
 .socials { display:flex; align-items:center; justify-content:center; gap:.7rem; margin-top:var(--gap-divider-to-socials); }
-.social { width:36px; height:36px; border-radius:50%; border:1px solid #dcdcdc; background:#fff; cursor:pointer; font-weight:700; display:inline-flex; align-items:center; justify-content:center; }
-.social.facebook { background:#1877F2; border-color:#1877F2; color:#fff; }
-.social.apple { background:#000; border-color:#000; color:#fff; font-size:18px; }
-.social.google { color:#4285F4; }
+.social { width:36px; height:36px; border-radius:50%; border:1px solid #dcdcdc; background:#fff; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:0; }
+.social svg { width:22px; height:22px; display:block; }
+.social:focus-visible { outline:2px solid #b69adf; outline-offset:2px; border-color:#b69adf; }
 
 @media (max-width: 900px){
   .signup-shell { grid-template-columns:1fr; }

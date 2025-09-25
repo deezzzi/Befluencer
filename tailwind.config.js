@@ -21,6 +21,7 @@ module.exports = {
       width: { sidebar: '260px' },
       boxShadow: { card: '0 2px 4px -2px rgba(0,0,0,0.06), 0 4px 12px -2px rgba(0,0,0,0.08)' },
       fontFamily: {
+        sans: ['Poppins', 'system-ui', 'sans-serif'],
         inter: ['Inter', 'system-ui', 'sans-serif'],
         tight: ['"Inter Tight"', 'Inter', 'system-ui', 'sans-serif']
       },

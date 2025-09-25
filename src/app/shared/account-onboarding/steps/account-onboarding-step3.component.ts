@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { AccountOnboardingService } from '../account-onboarding.service';
 
 @Component({
   selector: 'bf-account-onboarding-step3',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor, NgIf],
   template: `
-    <!-- Step 3: Platforms (multi-select). Selected chips are black. -->
+    <!-- Step 3: Platforms (single-select). Selected chip is black. If 'Other' is selected, show an input. -->
     <div>
       <h3 class="text-xl font-bold text-gray-900">Which social platform are you most active on?</h3>
-      <p class="mt-1 text-sm text-gray-500">(select as many)</p>
+      <p class="mt-1 text-sm text-gray-500">(select one)</p>
 
       <div class="mt-5 flex flex-wrap gap-3">
         <button type="button"
@@ -26,7 +26,16 @@ import { AccountOnboardingService } from '../account-onboarding.service';
         </button>
       </div>
 
-      
+      <!-- Other freeform input when 'Other' is selected -->
+      <div class="mt-5" *ngIf="isSelected('other')">
+        <input
+          type="text"
+          class="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+          placeholder="Please specify..."
+          [value]="svc.getPlatformOther()"
+          (input)="onOtherInput($any($event.target).value)"
+        />
+      </div>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -48,4 +57,5 @@ export class AccountOnboardingStep3Component {
 
   toggle(key: string) { this.svc.togglePlatform(key); }
   isSelected(key: string) { return this.svc.hasPlatform(key); }
+  onOtherInput(v: string) { this.svc.setPlatformOther(v); }
 }

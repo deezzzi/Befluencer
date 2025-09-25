@@ -34,8 +34,8 @@ import { LocalStorageService } from '../../shared/services/local-storage.service
         <div class="form-wrap">
           <h1 class="title">OTP Verification</h1>
           <p class="subtitle">
-            We have sent you a one-time password to your email account<br />
-            <strong>{{ maskedEmail }}</strong>
+             the dashboard on
+            {{ maskedEmail }}
           </p>
 
           <form [formGroup]="form" novalidate (ngSubmit)="onVerify()">
@@ -183,12 +183,12 @@ export class OtpVerificationComponent implements OnDestroy {
     }
   }
 
-  /** Submit handler: verify the code then proceed to Welcome. */
+  /** Submit handler: verify the code then proceed to Dashboard. */
   onVerify() {
     if (this.form.valid) {
       const value = this.code.controls.map(c => c.value).join('');
-      // placeholder: verify value, then navigate to welcome screen
-      this.router.navigateByUrl('/auth/welcome');
+      // TODO: verify value against backend; for now navigate directly to dashboard
+      this.router.navigateByUrl('/dashboard');
     }
   }
 }

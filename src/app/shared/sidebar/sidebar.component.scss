@@ -36,7 +36,18 @@
 }
 
 /* Nav links */
-.nav-link { position: relative; font-family: "Poppins", system-ui, sans-serif; font-size: 18px; font-weight: 500; line-height: 100%; letter-spacing: 0; }
+.nav-link {
+  position: relative;
+  font-family: "Poppins", system-ui, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.45; /* increase line-height for better readability */
+  letter-spacing: 0;
+  padding-block: 10px; /* add a bit more vertical padding */
+}
+
+/* Add space between consecutive nav items (overrides tailwind space-y) */
+.sidebar nav > .nav-link + .nav-link { margin-top: 6px; }
 
 /* Active pill (routerLinkActive adds .nav-active) */
 .nav-active { background: #ff7a00; color: #fff !important; box-shadow: 0 2px 4px rgba(255,122,0,0.25); }

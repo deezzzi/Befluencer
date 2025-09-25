@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { AccountOnboardingService } from '../account-onboarding.service';
 
 @Component({
   selector: 'bf-account-onboarding-step6-goals',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor, NgIf],
   template: `
-    <!-- Step 6: Goals. Multi-select chips; selected are black. Finish closes and marks onboarding complete. -->
+    <!-- Step 6: Goals. Single-select chip; selected is black. If 'Other' is selected, show an input. -->
     <div>
       <h3 class="text-xl font-bold text-gray-900">What will you use Befluencer for?</h3>
 
@@ -23,6 +23,17 @@ import { AccountOnboardingService } from '../account-onboarding.service';
                 [class.border-black]="isSelected(g.key)">
           {{ g.label }}
         </button>
+      </div>
+
+      <!-- Other freeform input when 'Other' is selected -->
+      <div class="mt-5" *ngIf="isSelected('other')">
+        <input
+          type="text"
+          class="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+          placeholder="Please specify..."
+          [value]="svc.getGoalOther()"
+          (input)="onOtherInput($any($event.target).value)"
+        />
       </div>
     </div>
   `,
@@ -44,4 +55,5 @@ export class AccountOnboardingStep6GoalsComponent {
 
   toggle(key: string) { this.svc.toggleGoal(key); }
   isSelected(key: string) { return this.svc.hasGoal(key); }
+  onOtherInput(v: string) { this.svc.setGoalOther(v); }
 }

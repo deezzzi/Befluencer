@@ -34,7 +34,8 @@ export const routes: Routes = [
   { path: 'signup/creator', component: CreatorSignupComponent, data: { title: 'Sign up - Creator' } },
   { path: 'login', loadComponent: () => import('./features/auth/login.component').then(m => m.LoginComponent), data: { title: 'Log in' } },
   { path: 'auth/otp', loadComponent: () => import('./features/auth/otp-verification.component').then(m => m.OtpVerificationComponent), data: { title: 'OTP Verification' } },
-  { path: 'auth/welcome', loadComponent: () => import('./features/auth/welcome.component').then(m => m.WelcomeComponent), data: { title: 'Welcome' } },
+  // Welcome page removed; keep route for backward compatibility and redirect to dashboard
+  { path: 'auth/welcome', pathMatch: 'full', redirectTo: '/dashboard' },
   { path: 'auth/forgot', loadComponent: () => import('./features/auth/forgot-password.component').then(m => m.ForgotPasswordComponent), data: { title: 'Forgot Password' } },
   { path: 'auth/create-password', loadComponent: () => import('./features/auth/create-password.component').then(m => m.CreatePasswordComponent), data: { title: 'Create New Password' } },
 

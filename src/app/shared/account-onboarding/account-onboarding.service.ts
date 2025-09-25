@@ -41,10 +41,16 @@ export class AccountOnboardingService {
   // Key: 'account-onboarding:content-types' (string[])
   private _contentTypes$ = new BehaviorSubject<Set<string>>(new Set());
   contentTypes$ = this._contentTypes$.asObservable();
+  // Optional freeform input when 'other' content type is chosen
+  private _contentOther$ = new BehaviorSubject<string>('');
+  contentOther$ = this._contentOther$.asObservable();
   // Platforms selection state (Step 3)
   // Key: 'account-onboarding:platforms' (string[])
   private _platforms$ = new BehaviorSubject<Set<string>>(new Set());
   platforms$ = this._platforms$.asObservable();
+  // Optional freeform input when 'other' platform is chosen
+  private _platformOther$ = new BehaviorSubject<string>('');
+  platformOther$ = this._platformOther$.asObservable();
   // Experience selection (Step 4)
   // Key: 'account-onboarding:experience' (string)
   private _experience$ = new BehaviorSubject<string | null>(null);
@@ -63,13 +69,20 @@ export class AccountOnboardingService {
   // Key: 'account-onboarding:goals' (string[])
   private _goals$ = new BehaviorSubject<Set<string>>(new Set());
   goals$ = this._goals$.asObservable();
+  // Optional freeform input when 'other' goal is chosen
+  private _goalOther$ = new BehaviorSubject<string>('');
+  goalOther$ = this._goalOther$.asObservable();
 
   constructor() {
     // Hydrate persisted progress/state on service creation.
-    const saved = this.storage.getJSON<string[]>('account-onboarding:content-types');
-    if (Array.isArray(saved)) this._contentTypes$.next(new Set(saved));
-    const savedPlatforms = this.storage.getJSON<string[]>('account-onboarding:platforms');
+  const saved = this.storage.getJSON<string[]>('account-onboarding:content-types');
+  if (Array.isArray(saved)) this._contentTypes$.next(new Set(saved));
+  const ctOther = this.storage.getJSON<string>('account-onboarding:content-other');
+  if (typeof ctOther === 'string') this._contentOther$.next(ctOther);
+  const savedPlatforms = this.storage.getJSON<string[]>('account-onboarding:platforms');
     if (Array.isArray(savedPlatforms)) this._platforms$.next(new Set(savedPlatforms));
+  const platOther = this.storage.getJSON<string>('account-onboarding:platform-other');
+  if (typeof platOther === 'string') this._platformOther$.next(platOther);
     const exp = this.storage.getJSON<string>('account-onboarding:experience');
     if (typeof exp === 'string') this._experience$.next(exp);
     const savedReferrers = this.storage.getJSON<string[]>('account-onboarding:referrers');
@@ -78,16 +91,17 @@ export class AccountOnboardingService {
   if (typeof otherRef === 'string') this._referrerOther$.next(otherRef);
   const code = this.storage.getJSON<string>('account-onboarding:referrer-referral-code');
   if (typeof code === 'string') this._referralCode$.next(code);
-    const savedGoals = this.storage.getJSON<string[]>('account-onboarding:goals');
-    if (Array.isArray(savedGoals)) this._goals$.next(new Set(savedGoals));
+  const savedGoals = this.storage.getJSON<string[]>('account-onboarding:goals');
+  if (Array.isArray(savedGoals)) this._goals$.next(new Set(savedGoals));
+  const goalOther = this.storage.getJSON<string>('account-onboarding:goal-other');
+  if (typeof goalOther === 'string') this._goalOther$.next(goalOther);
   }
 
-  /** Add or remove a content type selection (Step 2) */
+  /** Set content type selection (Step 2) — single select */
   toggleContentType(key: string): void {
-    const next = new Set(this._contentTypes$.value);
-    if (next.has(key)) next.delete(key); else next.add(key);
+    const next = new Set<string>();
+    next.add(key);
     this._contentTypes$.next(next);
-    // persist partial progress
     this.storage.setJSON('account-onboarding:content-types', Array.from(next));
   }
 
@@ -95,14 +109,22 @@ export class AccountOnboardingService {
     return this._contentTypes$.value.size > 0;
   }
 
+  /** Persist freeform details when 'Other' content type is selected (Step 2) */
+  setContentOther(value: string): void {
+    this._contentOther$.next(value);
+    this.storage.setJSON('account-onboarding:content-other', value);
+  }
+  getContentOther(): string { return this._contentOther$.value; }
+
   hasContentType(key: string): boolean {
     return this._contentTypes$.value.has(key);
   }
 
-  /** Add or remove a platform selection (Step 3) */
+  /** Set platform selection (Step 3) — single select */
   togglePlatform(key: string): void {
-    const next = new Set(this._platforms$.value);
-    if (next.has(key)) next.delete(key); else next.add(key);
+    // If the same key is clicked again, keep it selected (enforce exactly one)
+    const next = new Set<string>();
+    next.add(key);
     this._platforms$.next(next);
     this.storage.setJSON('account-onboarding:platforms', Array.from(next));
   }
@@ -115,6 +137,13 @@ export class AccountOnboardingService {
     return this._platforms$.value.size > 0;
   }
 
+  /** Persist freeform details when 'Other' platform is selected (Step 3) */
+  setPlatformOther(value: string): void {
+    this._platformOther$.next(value);
+    this.storage.setJSON('account-onboarding:platform-other', value);
+  }
+  getPlatformOther(): string { return this._platformOther$.value; }
+
   /** Set experience radio selection (Step 4) */
   setExperience(key: string): void {
     this._experience$.next(key);
@@ -125,8 +154,8 @@ export class AccountOnboardingService {
 
   // Referrers (Step 5)
   toggleReferrer(key: string): void {
-    const next = new Set(this._referrers$.value);
-    if (next.has(key)) next.delete(key); else next.add(key);
+    const next = new Set<string>();
+    next.add(key);
     this._referrers$.next(next);
     this.storage.setJSON('account-onboarding:referrers', Array.from(next));
   }
@@ -154,16 +183,23 @@ export class AccountOnboardingService {
   }
   getReferralCode(): string { return this._referralCode$.value; }
 
-  // Goals
+  // Goals (Step 6) — single select
   toggleGoal(key: string): void {
-    const next = new Set(this._goals$.value);
-    if (next.has(key)) next.delete(key); else next.add(key);
+    const next = new Set<string>();
+    next.add(key);
     this._goals$.next(next);
     this.storage.setJSON('account-onboarding:goals', Array.from(next));
   }
 
   hasGoal(key: string): boolean { return this._goals$.value.has(key); }
   isAnyGoalSelected(): boolean { return this._goals$.value.size > 0; }
+
+  /** Persist freeform details when 'Other' goal is selected (Step 6) */
+  setGoalOther(value: string): void {
+    this._goalOther$.next(value);
+    this.storage.setJSON('account-onboarding:goal-other', value);
+  }
+  getGoalOther(): string { return this._goalOther$.value; }
 
   /** Returns true if onboarding has been completed previously. */
   isCompleted(): boolean {

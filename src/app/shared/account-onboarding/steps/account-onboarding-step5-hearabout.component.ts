@@ -13,6 +13,7 @@ import { AccountOnboardingService } from '../account-onboarding.service';
          Selected chips are black -->
     <div>
       <h3 class="text-xl font-bold text-gray-900">Where did you hear about us?</h3>
+      <p class="mt-1 text-sm text-gray-500">(select one)</p>
 
       <div class="mt-5 flex flex-wrap gap-3">
         <button type="button"
@@ -33,7 +34,7 @@ import { AccountOnboardingService } from '../account-onboarding.service';
         <input
           type="text"
           class="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-          placeholder="Enter referral code"
+          placeholder="Enter Referral code"
           [value]="svc.getReferralCode()"
           (input)="onReferralInput($any($event.target).value)"
         />
