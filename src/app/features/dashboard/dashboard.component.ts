@@ -1,24 +1,25 @@
 import { Component, ChangeDetectionStrategy, inject, AfterViewInit, OnDestroy } from '@angular/core';
 import { NgFor, NgClass, NgIf } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { OnboardingOverlayComponent } from '../../shared/onboarding/onboarding-overlay.component';
 import { OnboardingService } from '../../shared/onboarding/onboarding.service';
 import { LocalStorageService } from '../../shared/services/local-storage.service';
 import { AccountOnboardingOverlayComponent } from '../../shared/account-onboarding/account-onboarding-overlay.component';
 import { AccountOnboardingService } from '../../shared/account-onboarding/account-onboarding.service';
 
-interface StatCard { title: string; value: string; diff?: number; }
+interface StatCard { tkey: string; value: string; diff?: number; }
 
 @Component({
   selector: 'bf-dashboard-page',
   standalone: true,
-  imports: [NgFor, NgClass, NgIf, OnboardingOverlayComponent, AccountOnboardingOverlayComponent],
+  imports: [NgFor, NgClass, NgIf, OnboardingOverlayComponent, AccountOnboardingOverlayComponent, TranslateModule],
   template: `
   <div class="space-y-4 md:space-y-6">
     <section>
       <!-- <h2 class="text-xl font-semibold mb-4">Key Metrics</h2> -->
   <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4 lg:grid-cols-3">
         <div *ngFor="let c of cards" class="rounded-xl p-3 md:p-4 bg-white dark:bg-gray-900 shadow-card border border-slate-100 dark:border-gray-700 flex flex-col gap-1">
-          <div class="text-xs uppercase tracking-wide text-slate-500 dark:text-gray-400">{{ c.title }}</div>
+          <div class="text-xs uppercase tracking-wide text-slate-500 dark:text-gray-400">{{ c.tkey | translate }}</div>
           <div class="text-xl md:text-2xl font-semibold">{{ c.value }}</div>
           <div *ngIf="c.diff !== undefined" class="text-xs" [ngClass]="c.diff! >= 0 ? 'text-emerald-600' : 'text-rose-600'">
             {{ c.diff! >= 0 ? '+' : ''}}{{ c.diff }}%
@@ -30,32 +31,32 @@ interface StatCard { title: string; value: string; diff?: number; }
   <section class="grid gap-4 sm:gap-5 lg:gap-6 lg:grid-cols-3">
   <div class="rounded-xl border border-slate-100 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-card min-h-[200px] md:min-h-[240px]">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="font-semibold">Traffic overview</h3>
-          <div class="text-xs text-slate-500">This year vs Last year</div>
+          <h3 class="font-semibold">{{ 'dashboard.traffic_overview' | translate }}</h3>
+          <div class="text-xs text-slate-500">{{ 'dashboard.this_year_vs_last_year' | translate }}</div>
         </div>
         <div class="h-[160px] md:h-[200px] bg-gradient-to-b from-slate-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-lg border border-slate-100 dark:border-gray-700 grid place-items-center">
-          <span class="text-xs text-slate-400">Line chart placeholder</span>
+          <span class="text-xs text-slate-400">{{ 'dashboard.line_chart_placeholder' | translate }}</span>
         </div>
       </div>
   <div class="rounded-xl border border-slate-100 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-card">
-        <h4 class="font-medium mb-4">Channels</h4>
+  <h4 class="font-medium mb-4">{{ 'dashboard.channels' | translate }}</h4>
         <ul class="space-y-2 text-sm">
-          <li class="flex items-center gap-3"><span class="inline-block h-2 w-6 rounded bg-rose-500"></span> TikTok</li>
-          <li class="flex items-center gap-3"><span class="inline-block h-2 w-6 rounded bg-orange-500"></span> YouTube</li>
-          <li class="flex items-center gap-3"><span class="inline-block h-2 w-6 rounded bg-amber-500"></span> Instagram</li>
-          <li class="flex items-center gap-3"><span class="inline-block h-2 w-6 rounded bg-violet-500"></span> Snapchat</li>
-          <li class="flex items-center gap-3"><span class="inline-block h-2 w-6 rounded bg-emerald-500"></span> Facebook</li>
+          <li class="flex items-center gap-3"><span class="inline-block h-2 w-6 rounded bg-rose-500"></span> {{ 'dashboard.platforms.tiktok' | translate }}</li>
+          <li class="flex items-center gap-3"><span class="inline-block h-2 w-6 rounded bg-orange-500"></span> {{ 'dashboard.platforms.youtube' | translate }}</li>
+          <li class="flex items-center gap-3"><span class="inline-block h-2 w-6 rounded bg-amber-500"></span> {{ 'dashboard.platforms.instagram' | translate }}</li>
+          <li class="flex items-center gap-3"><span class="inline-block h-2 w-6 rounded bg-violet-500"></span> {{ 'dashboard.platforms.snapchat' | translate }}</li>
+          <li class="flex items-center gap-3"><span class="inline-block h-2 w-6 rounded bg-emerald-500"></span> {{ 'dashboard.platforms.facebook' | translate }}</li>
         </ul>
       </div>
   <div class="rounded-xl border border-slate-100 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-card">
-        <h4 class="font-medium mb-4">Audience by country</h4>
+  <h4 class="font-medium mb-4">{{ 'dashboard.audience_by_country' | translate }}</h4>
         <div class="flex items-center gap-6">
           <div class="w-24 h-24 md:w-28 md:h-28 rounded-full bg-[conic-gradient(var(--tw-gradient-stops))] from-rose-500 via-orange-400 via-amber-400 via-emerald-500 to-violet-500"></div>
           <ul class="text-sm space-y-2">
-            <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-rose-500"></span> United States <span class="ml-2 text-slate-500">52%</span></li>
-            <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-orange-500"></span> Canada <span class="ml-2 text-slate-500">22%</span></li>
-            <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-amber-500"></span> Mexico <span class="ml-2 text-slate-500">15%</span></li>
-            <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-violet-500"></span> Other <span class="ml-2 text-slate-500">11%</span></li>
+            <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-rose-500"></span> {{ 'dashboard.countries.us' | translate }} <span class="ml-2 text-slate-500">52%</span></li>
+            <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-orange-500"></span> {{ 'dashboard.countries.ca' | translate }} <span class="ml-2 text-slate-500">22%</span></li>
+            <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-amber-500"></span> {{ 'dashboard.countries.mx' | translate }} <span class="ml-2 text-slate-500">15%</span></li>
+            <li class="flex items-center gap-2"><span class="h-2 w-2 rounded-full bg-violet-500"></span> {{ 'dashboard.other' | translate }} <span class="ml-2 text-slate-500">11%</span></li>
           </ul>
         </div>
       </div>
@@ -65,51 +66,51 @@ interface StatCard { title: string; value: string; diff?: number; }
   <section class="grid gap-4 sm:gap-5 lg:gap-6 lg:grid-cols-3">
   <div class="lg:col-span-2 rounded-xl border border-slate-100 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-card min-h-[200px] md:min-h-[260px]">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="font-semibold">Weekly performance</h3>
-          <div class="text-xs text-slate-500">Lorem 1 vs Lorem 2</div>
+          <h3 class="font-semibold">{{ 'dashboard.weekly_performance' | translate }}</h3>
+          <div class="text-xs text-slate-500">{{ 'dashboard.lorem1_vs_lorem2' | translate }}</div>
         </div>
         <div class="h-[160px] md:h-[200px] bg-gradient-to-b from-slate-50 to-white dark:from-gray-800 dark:to-gray-900 rounded-lg border border-slate-100 dark:border-gray-700 grid place-items-center">
-          <span class="text-xs text-slate-400">Bar chart placeholder</span>
+          <span class="text-xs text-slate-400">{{ 'dashboard.bar_chart_placeholder' | translate }}</span>
         </div>
       </div>
   <div class="rounded-xl border border-slate-100 dark:border-gray-700 bg-white dark:bg-gray-900 p-4 md:p-6 shadow-card min-h-[200px] md:min-h-[260px]">
         <div class="flex items-center justify-between mb-4">
-          <h4 class="font-medium">Recent activity</h4>
-          <span class="text-xs text-slate-500">23 – 30 March 2020</span>
+          <h4 class="font-medium">{{ 'dashboard.recent_activity' | translate }}</h4>
+          <span class="text-xs text-slate-500">{{ 'dashboard.date_range_example' | translate }}</span>
         </div>
         <ul class="text-sm divide-y divide-slate-100 dark:divide-gray-800">
           <li class="py-2.5 flex items-center justify-between">
             <div>
-              <div class="font-medium">TikTok</div>
-              <div class="text-xs text-slate-500">27 March 2020, at 12:30 PM</div>
+              <div class="font-medium">{{ 'dashboard.platforms.tiktok' | translate }}</div>
+              <div class="text-xs text-slate-500">{{ 'dashboard.transaction_date_example' | translate }}</div>
             </div>
-            <span class="text-emerald-600">+GH¢ 50</span>
+            <span class="text-emerald-600">{{ '+GH¢ 50' }}</span>
           </li>
           <li class="py-2.5 flex items-center justify-between">
             <div>
-              <div class="font-medium">Facebook</div>
-              <div class="text-xs text-slate-500">27 March 2020, at 12:30 PM</div>
+              <div class="font-medium">{{ 'dashboard.platforms.facebook' | translate }}</div>
+              <div class="text-xs text-slate-500">{{ 'dashboard.transaction_date_example' | translate }}</div>
             </div>
-            <span class="text-emerald-600">+GH¢ 100</span>
+            <span class="text-emerald-600">{{ '+GH¢ 100' }}</span>
           </li>
           <li class="py-2.5 flex items-center justify-between">
             <div>
-              <div class="font-medium">YouTube</div>
-              <div class="text-xs text-slate-500">27 March 2020, at 12:30 PM</div>
-            </div>
-            <span class="text-emerald-600">+GH¢ 100</span>
-          </li>
-          <li class="py-2.5 flex items-center justify-between">
-            <div>
-              <div class="font-medium">Snapchat</div>
-              <div class="text-xs text-slate-500">27 March 2020, at 12:30 PM</div>
+              <div class="font-medium">{{ 'dashboard.platforms.youtube' | translate }}</div>
+              <div class="text-xs text-slate-500">{{ 'dashboard.transaction_date_example' | translate }}</div>
             </div>
             <span class="text-emerald-600">+GH¢ 100</span>
           </li>
           <li class="py-2.5 flex items-center justify-between">
             <div>
-              <div class="font-medium">Twitter</div>
-              <div class="text-xs text-slate-500">27 March 2020, at 12:30 PM</div>
+              <div class="font-medium">{{ 'dashboard.platforms.snapchat' | translate }}</div>
+              <div class="text-xs text-slate-500">{{ 'dashboard.transaction_date_example' | translate }}</div>
+            </div>
+            <span class="text-emerald-600">+GH¢ 100</span>
+          </li>
+          <li class="py-2.5 flex items-center justify-between">
+            <div>
+              <div class="font-medium">{{ 'dashboard.platforms.twitter' | translate }}</div>
+              <div class="text-xs text-slate-500">{{ 'dashboard.transaction_date_example' | translate }}</div>
             </div>
             <span class="text-emerald-600">+GH¢ 100</span>
           </li>
@@ -129,10 +130,10 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   private storage = inject(LocalStorageService);
   private accountOnboarding = inject(AccountOnboardingService);
   cards: StatCard[] = [
-    { title: 'Users', value: '12.4K', diff: 4.2 },
-    { title: 'Revenue', value: '$86K', diff: 1.1 },
-    { title: 'Engagement', value: '58%', diff: -2.3 },
-    { title: 'Conversion', value: '4.9%', diff: 0.6 },
+    { tkey: 'dashboard.cards.users', value: '12.4K', diff: 4.2 },
+    { tkey: 'dashboard.cards.revenue', value: '$86K', diff: 1.1 },
+    { tkey: 'dashboard.cards.engagement', value: '58%', diff: -2.3 },
+    { tkey: 'dashboard.cards.conversion', value: '4.9%', diff: 0.6 },
   ];
 
   // When onboarding closes as completed, we schedule the Tour.

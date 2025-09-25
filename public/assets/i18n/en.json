@@ -1,0 +1,57 @@
+{
+  "home": {
+    "welcome": "Welcome to our ecosystem!",
+    "already_account": "Already have an account?",
+    "login": "Log in",
+    "i_am_a": "I am a",
+    "creator": "Creator",
+    "brand": "Brand",
+    "terms_html": "By signing up, you agree to the <0>Terms of Service</0> and <1>Privacy,<br> Policy</1>, including <2>cookie use</2>."
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "campaigns": "Campaigns",
+    "media": "Media Kit",
+    "analytics": "Analytics",
+    "wallet": "Wallet",
+    "collab": "Collab Tools",
+    "tasks": "Tasks",
+    "community": "Community",
+    "settings": "Settings",
+    "support": "Support",
+    "logout": "Logout"
+  },
+  "dashboard": {
+    "cards": {
+      "users": "Users",
+      "revenue": "Revenue",
+      "engagement": "Engagement",
+      "conversion": "Conversion"
+    },
+    "traffic_overview": "Traffic overview",
+    "this_year_vs_last_year": "This year vs Last year",
+    "line_chart_placeholder": "Line chart placeholder",
+    "channels": "Channels",
+    "platforms": {
+      "tiktok": "TikTok",
+      "youtube": "YouTube",
+      "instagram": "Instagram",
+      "snapchat": "Snapchat",
+      "facebook": "Facebook",
+      "twitter": "Twitter"
+    },
+    "audience_by_country": "Audience by country",
+    "countries": {
+      "us": "United States",
+      "ca": "Canada",
+      "mx": "Mexico"
+    },
+    "other": "Other",
+    "weekly_performance": "Weekly performance",
+    "lorem1_vs_lorem2": "Lorem 1 vs Lorem 2",
+    "bar_chart_placeholder": "Bar chart placeholder",
+    "recent_activity": "Recent activity",
+    "date_range_example": "23 – 30 March 2020",
+    "transaction_date_example": "27 March 2020, at 12:30 PM"
+  }
+}

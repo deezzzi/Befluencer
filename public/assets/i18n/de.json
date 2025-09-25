@@ -1,0 +1,57 @@
+{
+  "home": {
+    "welcome": "Willkommen in unserem Ökosystem!",
+    "already_account": "Sie haben bereits ein Konto?",
+    "login": "Anmelden",
+    "i_am_a": "Ich bin",
+    "creator": "Creator",
+    "brand": "Marke",
+    "terms_html": "Mit der Registrierung stimmen Sie den <0>Nutzungsbedingungen</0> und der <1>Datenschutzerklärung</1> zu, einschließlich der <2>Cookie-Nutzung</2>."
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "campaigns": "Kampagnen",
+    "media": "Media Kit",
+    "analytics": "Analysen",
+    "wallet": "Wallet",
+    "collab": "Zusammenarbeits-Tools",
+    "tasks": "Aufgaben",
+    "community": "Community",
+    "settings": "Einstellungen",
+    "support": "Support",
+    "logout": "Abmelden"
+  },
+  "dashboard": {
+    "cards": {
+      "users": "Benutzer",
+      "revenue": "Umsatz",
+      "engagement": "Engagement",
+      "conversion": "Konversion"
+    },
+    "traffic_overview": "Traffic-Übersicht",
+    "this_year_vs_last_year": "Dieses Jahr vs Letztes Jahr",
+    "line_chart_placeholder": "Platzhalter für Liniendiagramm",
+    "channels": "Kanäle",
+    "platforms": {
+      "tiktok": "TikTok",
+      "youtube": "YouTube",
+      "instagram": "Instagram",
+      "snapchat": "Snapchat",
+      "facebook": "Facebook",
+      "twitter": "Twitter"
+    },
+    "audience_by_country": "Zielgruppe nach Ländern",
+    "countries": {
+      "us": "Vereinigte Staaten",
+      "ca": "Kanada",
+      "mx": "Mexiko"
+    },
+    "other": "Andere",
+    "weekly_performance": "Wöchentliche Leistung",
+    "lorem1_vs_lorem2": "Lorem 1 vs Lorem 2",
+    "bar_chart_placeholder": "Platzhalter für Balkendiagramm",
+    "recent_activity": "Neueste Aktivitäten",
+    "date_range_example": "23. – 30. März 2020",
+    "transaction_date_example": "27. März 2020, um 12:30 Uhr"
+  }
+}

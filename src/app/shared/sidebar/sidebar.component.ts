@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { NgClass, NgFor, NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface NavItem { icon: string; label: string; route: string; hasChildren?: boolean; }
 
@@ -15,7 +16,7 @@ interface NavItem { icon: string; label: string; route: string; hasChildren?: bo
 @Component({
   selector: 'bf-sidebar',
   standalone: true,
-  imports: [NgClass, NgFor, NgIf, NgSwitch, NgSwitchCase, RouterLink, RouterLinkActive],
+  imports: [NgClass, NgFor, NgIf, NgSwitch, NgSwitchCase, RouterLink, RouterLinkActive, TranslateModule],
   styleUrls: ['./sidebar.component.scss'],
   template: `
   <aside
@@ -49,7 +50,7 @@ interface NavItem { icon: string; label: string; route: string; hasChildren?: bo
     <nav class="flex-1 overflow-y-auto px-3 pt-2 space-y-1">
       <ng-container *ngFor="let item of nav">
         <a
-          [attr.id]="item.label === 'Collab Tools' ? 'bf-collab-anchor' : null"
+          [attr.id]="item.tkey === 'nav.collab' ? 'bf-collab-anchor' : null"
           [routerLink]="item.route"
           routerLinkActive="nav-active"
           #rla="routerLinkActive"
@@ -97,7 +98,7 @@ interface NavItem { icon: string; label: string; route: string; hasChildren?: bo
               </svg>
             </ng-container>
           </span>
-          <span *ngIf="!collapsed" class="flex-1 truncate">{{ item.label }}</span>
+          <span *ngIf="!collapsed" class="flex-1 truncate">{{ item.tkey | translate }}</span>
           <svg *ngIf="!collapsed && item.hasChildren" xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m9 6 6 6-6 6" /></svg>
         </a>
       </ng-container>
@@ -105,11 +106,11 @@ interface NavItem { icon: string; label: string; route: string; hasChildren?: bo
 
     <!-- Logout -->
     <div class="px-3 pb-4 pt-2">
-      <a class="nav-link flex items-center gap-3 rounded-md px-3 py-2 text-[13px] font-medium text-orange-500 hover:bg-orange-50 hover:text-orange-600 transition" href="#" (click)="onLogout($event)">
+  <a class="nav-link flex items-center gap-3 rounded-md px-3 py-2 text-[13px] font-medium text-orange-500 hover:bg-orange-50 hover:text-orange-600 transition" href="#" (click)="onLogout($event)">
         <span class="icon-wrapper inline-flex h-5 w-5 items-center justify-center">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
         </span>
-        <span *ngIf="!collapsed">Logout</span>
+        <span *ngIf="!collapsed">{{ 'nav.logout' | translate }}</span>
       </a>
     </div>
   </aside>
@@ -119,17 +120,17 @@ interface NavItem { icon: string; label: string; route: string; hasChildren?: bo
 export class SidebarComponent {
   @Input() collapsed = false;
   @Output() toggle = new EventEmitter<void>();
-  nav: NavItem[] = [
-    { icon: 'dashboard', label: 'Dashboard', route: '/dashboard' },
-    { icon: 'campaigns', label: 'Campaigns', route: '/campaigns' },
-    { icon: 'media', label: 'Media Kit', route: '/media-kit' },
-    { icon: 'analytics', label: 'Analytics', route: '/analytics' },
-    { icon: 'wallet', label: 'Wallet', route: '/wallet' },
-    { icon: 'collab', label: 'Collab Tools', route: '/collab-tools' },
-    { icon: 'tasks', label: 'Tasks', route: '/tasks' },
-    { icon: 'community', label: 'Community', route: '/community' },
-    { icon: 'settings', label: 'Settings', route: '/settings', hasChildren: true },
-    { icon: 'support', label: 'Support', route: '/support', hasChildren: true },
+  nav = [
+    { icon: 'dashboard', tkey: 'nav.dashboard', route: '/dashboard' },
+    { icon: 'campaigns', tkey: 'nav.campaigns', route: '/campaigns' },
+    { icon: 'media', tkey: 'nav.media', route: '/media-kit' },
+    { icon: 'analytics', tkey: 'nav.analytics', route: '/analytics' },
+    { icon: 'wallet', tkey: 'nav.wallet', route: '/wallet' },
+    { icon: 'collab', tkey: 'nav.collab', route: '/collab-tools' },
+    { icon: 'tasks', tkey: 'nav.tasks', route: '/tasks' },
+    { icon: 'community', tkey: 'nav.community', route: '/community' },
+    { icon: 'settings', tkey: 'nav.settings', route: '/settings', hasChildren: true },
+    { icon: 'support', tkey: 'nav.support', route: '/support', hasChildren: true },
   ];
 
   onLogout(e: Event) { e.preventDefault(); /* TODO: hook auth */ }

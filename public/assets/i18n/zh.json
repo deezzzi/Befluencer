@@ -1,0 +1,57 @@
+{
+  "home": {
+    "welcome": "欢迎来到我们的生态系统！",
+    "already_account": "已有账户？",
+    "login": "登录",
+    "i_am_a": "我是",
+    "creator": "创作者",
+    "brand": "品牌",
+    "terms_html": "注册即表示您同意<0>服务条款</0>和<1>隐私政策</1>，包括<2>Cookie 的使用</2>。"
+  },
+  "nav": {
+    "dashboard": "仪表盘",
+    "campaigns": "活动",
+    "media": "媒体包",
+    "analytics": "分析",
+    "wallet": "钱包",
+    "collab": "协作工具",
+    "tasks": "任务",
+    "community": "社区",
+    "settings": "设置",
+    "support": "支持",
+    "logout": "退出"
+    },
+    "dashboard": {
+      "cards": {
+        "users": "用户",
+        "revenue": "收入",
+        "engagement": "参与度",
+        "conversion": "转化率"
+      },
+      "traffic_overview": "流量概览",
+      "this_year_vs_last_year": "今年 vs 去年",
+      "line_chart_placeholder": "折线图占位符",
+      "channels": "渠道",
+      "platforms": {
+        "tiktok": "抖音",
+        "youtube": "YouTube",
+        "instagram": "Instagram",
+        "snapchat": "Snapchat",
+        "facebook": "Facebook",
+        "twitter": "Twitter"
+      },
+      "audience_by_country": "按国家/地区划分的受众",
+      "countries": {
+        "us": "美国",
+        "ca": "加拿大",
+        "mx": "墨西哥"
+      },
+      "other": "其他",
+      "weekly_performance": "每周表现",
+      "lorem1_vs_lorem2": "Lorem 1 vs Lorem 2",
+      "bar_chart_placeholder": "柱状图占位符",
+      "recent_activity": "最近活动",
+      "date_range_example": "2020年3月23日 – 30日",
+      "transaction_date_example": "2020年3月27日 12:30"
+    }
+}

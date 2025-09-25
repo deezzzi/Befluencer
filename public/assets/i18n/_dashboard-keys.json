@@ -1,0 +1,35 @@
+{
+  "dashboard": {
+    "cards": {
+      "users": "Users",
+      "revenue": "Revenue",
+      "engagement": "Engagement",
+      "conversion": "Conversion"
+    },
+    "traffic_overview": "Traffic overview",
+    "this_year_vs_last_year": "This year vs Last year",
+    "line_chart_placeholder": "Line chart placeholder",
+    "channels": "Channels",
+    "platforms": {
+      "tiktok": "TikTok",
+      "youtube": "YouTube",
+      "instagram": "Instagram",
+      "snapchat": "Snapchat",
+      "facebook": "Facebook",
+      "twitter": "Twitter"
+    },
+    "audience_by_country": "Audience by country",
+    "countries": {
+      "us": "United States",
+      "ca": "Canada",
+      "mx": "Mexico"
+    },
+    "other": "Other",
+    "weekly_performance": "Weekly performance",
+    "lorem1_vs_lorem2": "Lorem 1 vs Lorem 2",
+    "bar_chart_placeholder": "Bar chart placeholder",
+    "recent_activity": "Recent activity",
+    "date_range_example": "23 – 30 March 2020",
+    "transaction_date_example": "27 March 2020, at 12:30 PM"
+  }
+}

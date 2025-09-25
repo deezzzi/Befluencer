@@ -111,7 +111,7 @@ export class OtpVerificationComponent implements OnDestroy {
     // Keep only digits
     el!.value = val.replace(/\D/g, '').slice(0, 1);
     if (el!.value && index < inputs.length - 1) {
-      inputs[index + 1].nativeElement.focus();
+      inputs[index + 1].nativeElement.focus();  
     }
   }
 

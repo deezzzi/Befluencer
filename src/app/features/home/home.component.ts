@@ -1,6 +1,8 @@
-import { Component, ChangeDetectionStrategy, AfterViewInit, ElementRef, ViewChild, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, AfterViewInit, ElementRef, ViewChild, HostListener, ChangeDetectorRef, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgIf, NgFor } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
+import { TranslationService } from '../../shared/services/translation.service';
 
 /**
  * HomeComponent
@@ -10,7 +12,7 @@ import { NgIf, NgFor } from '@angular/common';
 @Component({
   selector: 'bf-home-page',
   standalone: true,
-  imports: [RouterLink, NgIf, NgFor],
+  imports: [RouterLink, NgIf, NgFor, TranslateModule],
   template: `
     <div class="home-shell">
       <div class="left">
@@ -39,22 +41,20 @@ import { NgIf, NgFor } from '@angular/common';
               <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="#777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
             </div>
             <ul class="dropdown-panel" *ngIf="openLang" role="listbox">
-              <li *ngFor="let l of languages" (mousedown)="selectLang(l)" role="option">{{ l }}</li>
+              <li *ngFor="let l of languages" (mousedown)="selectLang(l)" role="option">{{ l.label }}</li>
             </ul>
           </div>
         </div>
 
         <div class="right-content" role="main">
-          <h1 class="welcome" #welcomeEl>Welcome to our ecosystem!</h1>
-          <div class="login">Already have an account? <a routerLink="/login">Log in</a></div>
-          <div class="iam">I am a</div>
+          <h1 class="welcome" #welcomeEl>{{ 'home.welcome' | translate }}</h1>
+          <div class="login">{{ 'home.already_account' | translate }} <a routerLink="/login">{{ 'home.login' | translate }}</a></div>
+          <div class="iam">{{ 'home.i_am_a' | translate }}</div>
           <div class="role-buttons" [style.width.px]="welcomeWidth">
-            <button class="btn creator" routerLink="/signup/creator">Creator</button>
-            <button class="btn brand">Brand</button>
+            <button class="btn creator" routerLink="/signup/creator">{{ 'home.creator' | translate }}</button>
+            <button class="btn brand">{{ 'home.brand' | translate }}</button>
           </div>
-          <p class="terms">
-            By signing up, you agree to the <a href="#" (click)="$event.preventDefault()">Terms of Service</a> and <a href="#" (click)="$event.preventDefault()">Privacy,<br> Policy</a>, including <a href="#" (click)="$event.preventDefault()">cookie use</a>.
-          </p>
+          <p class="terms" [innerHTML]="'home.terms_html' | translate"></p>
         </div>
       </div>
     </div>
@@ -63,23 +63,35 @@ import { NgIf, NgFor } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements AfterViewInit {
+  private i18n = inject(TranslationService);
   @ViewChild('welcomeEl') welcomeEl!: ElementRef<HTMLElement>;
   welcomeWidth = 0;
   openLang = false;
-  languages = ['English UK','Français','Español','Deutsch','中文'];
-  selectedLanguage = this.languages[0];
+  languages = [
+    { code: 'en', label: 'English' },
+    { code: 'fr', label: 'Français' },
+    { code: 'es', label: 'Español' },
+    { code: 'de', label: 'Deutsch' },
+    { code: 'zh', label: '中文' }
+  ];
+  selectedLanguage = 'English';
 
   /** Toggle the language dropdown panel. */
   toggleLang(){
     this.openLang = !this.openLang;
   }
   /** Select a language; future: persist in preferences or i18n service. */
-  selectLang(l: string){
-    this.selectedLanguage = l;
+  selectLang(l: { code: string; label: string }){
+    this.selectedLanguage = l.label;
     this.openLang = false;
+    this.i18n.use(l.code);
+    // update welcome width after language switch
+    setTimeout(() => this.updateWidths());
   }
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef) {
+    this.syncSelectedLabel();
+  }
 
   ngAfterViewInit(): void {
     this.updateWidths();
@@ -96,5 +108,10 @@ export class HomeComponent implements AfterViewInit {
       this.welcomeWidth = Math.ceil(this.welcomeEl.nativeElement.getBoundingClientRect().width);
       this.cdr.markForCheck();
     }
+  }
+
+  private syncSelectedLabel(){
+    const found = this.languages.find(l => l.code === this.i18n.current);
+    if (found) this.selectedLanguage = found.label;
   }
 }
