@@ -65,7 +65,7 @@ form { display:flex; flex-direction:column; gap:0; }
   .tagline { display:none; }
   .form-wrap { width:100%; padding:24px; margin:auto; }
 }
-
+ 
 @media (min-width: 1800px){
   .otp-shell { width:min(1923px, 100%); max-width:1923px; margin:0 auto; grid-template-columns:calc(100% - 820px) 820px; min-height:100dvh; height:auto; }
   .right { width:820px; }

@@ -27,7 +27,7 @@ import { RouterLink } from '@angular/router';
           </div>
         </div>
 
-        <div class="content-wrap">
+        <div class="content-wrap">  
           <h1 class="title">
             <span class="warm">Welcome</span>
             <span> To A New Era of Collaboration !</span>

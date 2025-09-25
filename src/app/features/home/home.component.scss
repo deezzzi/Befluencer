@@ -10,6 +10,7 @@
 /* Dropdown reused like setup */
 .dropdown { position:relative; }
 .dropdown .input-icon { display:flex; align-items:center; gap:.35rem; border:1px solid transparent; padding:.25rem .5rem; border-radius:999px; cursor:pointer; }
+.dropdown .input-icon .lang-icon { flex:0 0 auto; }
 .dropdown .input-icon input { border:none; outline:none; width:120px; text-align:right; font-size:.9rem; color:#444; background:transparent; }
 .dropdown .chevron { pointer-events:none; }
 .dropdown.open .input-icon { border-color:#dadada; background:#fff; }
@@ -58,16 +59,30 @@
   text-align:center;
 }
 
-.role-buttons { display:flex; gap:10px; margin:.3rem 0 1.1rem; justify-content:space-between; }
-.btn { border-radius:120px; padding:12px 6px; font-weight:600; cursor:pointer; font-size:.95rem; background:#fff; width:204px; height:51px; display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; border-width:2px; border-style:solid; transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; opacity:1; }
+.role-buttons { display:flex; gap:10px; margin:.3rem 0 1.1rem; justify-content:space-between; min-width:418px; }
+.btn { border-radius:120px; padding:12px 6px; font-weight:600; cursor:pointer; font-size:16px; font-family:'Poppins',sans-serif; background:#fff; width:204px; height:51px; display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; border-width:2px; border-style:solid; transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; opacity:1; }
 .btn.creator { border:2px solid #ff7a00; color:#111; }
 .btn.creator:hover { background:#ff7a00; color:#fff; border-color:#ff7a00; box-shadow:0 6px 16px -6px rgba(255,122,0,.5); }
 .btn.brand { border:2px solid #9b6ad4; color:#111; }
 .btn.brand:hover { background:#9b6ad4; color:#fff; border-color:#9b6ad4; box-shadow:0 6px 16px -6px rgba(155,106,212,.5); }
 
-.terms { color:#777; font-size:.85rem; line-height:1.35; margin:0; }
-.terms a { color:#6b2acb; text-decoration:none; }
-.terms a:hover { text-decoration:underline; }
+.terms {
+  color:#777;
+  margin:0;
+  font-family:'Poppins', sans-serif;
+  font-weight:400; /* Regular */
+  font-style: normal;
+  font-size:14px;
+  line-height:100%;
+  letter-spacing:0;
+  text-align:left;
+  text-decoration:none; /* do not underline full sentence */
+}
+.terms a {
+  color: inherit; /* same color as sentence */
+  text-decoration: underline; /* underline only the links */
+}
+.terms a:hover { text-decoration: underline; }
 
 @media (max-width: 900px){
   .home-shell { grid-template-columns:1fr; }
