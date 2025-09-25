@@ -1,7 +1,7 @@
-.signup-shell { display:grid; grid-template-columns:1.1fr .9fr; min-height:100dvh; height:auto; background:#fff; overflow-x:hidden; }
+.signup-shell { display:grid; grid-template-columns:1.05fr .95fr; min-height:100dvh; height:auto; background:#fff; overflow-x:hidden; }
 .left { display:flex; align-items:center; justify-content:center; padding:2rem; }
-.left.purple { background:#f0e9fb; }
-.right { position:relative; display:flex; flex-direction:column; padding:0 2rem 1.45rem; border-left:1px solid #e9e9e9; }
+.left.purple { background:#fafafa; }
+.right { position:relative; display:flex; flex-direction:column; align-items:center; padding:1.25rem 2rem 2rem; }
 .topbar { width:100%; display:flex; align-items:center; justify-content:space-between; min-height:54px; padding:41px 0 10px; }
 .back-link { color:#777; text-decoration:none; font-size:.95rem; }
 .back-link:hover { text-decoration:underline; }

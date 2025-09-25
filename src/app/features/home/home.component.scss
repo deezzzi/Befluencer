@@ -48,7 +48,7 @@
 .login a:hover { text-decoration:underline; }
 .iam {
   color:#666;
-  margin:.75rem 0 .6rem;
+  margin:.75rem 0 23px;
   font-family: 'Poppins', sans-serif;
   font-weight:600; /* SemiBold */
   font-style: normal;
@@ -59,7 +59,7 @@
   text-align:center;
 }
 
-.role-buttons { display:flex; gap:10px; margin:.3rem 0 1.1rem; justify-content:space-between; min-width:418px; }
+.role-buttons { display:flex; gap:10px; margin:0 0 1.1rem; justify-content:space-between; min-width:418px; }
 .btn { border-radius:120px; padding:12px 6px; font-weight:600; cursor:pointer; font-size:16px; font-family:'Poppins',sans-serif; background:#fff; width:204px; height:51px; display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; border-width:2px; border-style:solid; transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease; opacity:1; }
 .btn.creator { border:2px solid #ff7a00; color:#111; }
 .btn.creator:hover { background:#ff7a00; color:#fff; border-color:#ff7a00; box-shadow:0 6px 16px -6px rgba(255,122,0,.5); }
