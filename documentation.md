@@ -1,12 +1,12 @@
-# Befluencer Frontend — Engineering Guide
+# Befluencer Frontend  Guide
 
-This document provides a comprehensive, professional overview of the frontend codebase: architecture, conventions, environments, developer workflows, testing and quality gates, performance, accessibility, and operational guidelines.
+This document provides a comprehensive, professional overview of the frontend codebase: architecture, conventions, environments, developer workflows, testing and quality gates, performance, accessibility, and operational guidelines. It reflects recent improvements: externalized templates/styles, i18n via ngx-translate, and two distinct onboarding flows.
 
 ## 1. System Overview
 
-- Stack: Angular 19 (standalone API), TypeScript 5.7, TailwindCSS 3, RxJS 7, Karma/Jasmine
+- Stack: Angular 19 (standalone), TypeScript 5.7, TailwindCSS 3, SCSS, RxJS 7, Karma/Jasmine, ngx-translate
 - Package scripts: `start`, `build`, `watch`, `test` (see `package.json`)
-- Styling: TailwindCSS (PostCSS + Autoprefixer); SCSS enabled for component styles
+- Styling: TailwindCSS (PostCSS + Autoprefixer); component-level SCSS for focused styles
 - Routing: Angular Router with standalone components and lazy loading
 - Target: SPA served by any static host (build artifacts in `dist/frontend`)
 
@@ -18,14 +18,14 @@ This document provides a comprehensive, professional overview of the frontend co
 - Routing: Defined in `src/app/app.routes.ts` with a `DashboardLayoutComponent` hosting feature routes.
 - Features: Implemented under `src/app/features/*` using standalone Angular components.
 - Shared UI and Services: Under `src/app/shared/*` (components, services, utilities).
-- Styling: Global styles in `src/styles.scss`; Tailwind setup via `tailwind.config.js` and `postcss.config.js`.
+- Styling: Global styles in `src/styles.scss`; Tailwind setup via `tailwind.config.js` and `postcss.config.js`. Global font is Poppins with smoothing.
 
 ### 2.2 Directory layout
 
 - `src/app/features/*`: Feature pages/components (e.g., dashboard, analytics, media-kit)
 - `src/app/layout/*`: Layout components (e.g., topbar, sidebar, dashboard layout)
 - `src/app/shared/*`: Reusable components, services (e.g., onboarding, local-storage)
-- `public/`: Static assets copied verbatim to build output
+- `public/`: Static assets copied verbatim to build output (note: ensure brand logo path matches references; some templates use `/logo.PNG`, repo includes `logo-ds.PNG`)
 
 ### 2.3 State & data flow
 
@@ -33,7 +33,7 @@ This document provides a comprehensive, professional overview of the frontend co
 - Cross-feature state: Lightweight services with RxJS (e.g., `OnboardingService`)
 - Storage: `LocalStorageService` for simple persistence
 
-## 3. Developer Experience
+## 3. Development
 
 ### 3.1 Prerequisites
 
@@ -46,13 +46,15 @@ This document provides a comprehensive, professional overview of the frontend co
 - Build: `npm run build` (outputs to `dist/frontend`)
 - Watch build: `npm run watch`
 - Unit tests: `npm run test`
+Windows shell note: When chaining commands locally, use `;` in PowerShell.
 
 ### 3.3 Code style & conventions
 
 - Standalone components (no NgModules) with `ChangeDetectionStrategy.OnPush` where possible
-- Use Tailwind utility classes for layout/spacing colors; keep component SCSS focused
+- Use Tailwind utility classes for layout/spacing/colors; keep component SCSS focused
 - Prefer `loadComponent` for lazy pages; route titles via `data.title`
 - Keep selectors prefixed with `bf-` to avoid collisions
+- Keep separation of concerns: external `templateUrl` and `styleUrls`, avoid inline HTML/SCSS in TS
 
 ## 4. Features
 
@@ -69,6 +71,7 @@ This document provides a comprehensive, professional overview of the frontend co
 - Anchors: `#bf-bell-anchor`, `#bf-profile-anchor`, `#bf-collab-anchor`
 - Service API: `open(step=1)`, `close()`, `next()`, `back()`; `totalSteps = 4`
 - First-visit logic: gated via `localStorage` in dashboard (auto-open ~5s after first load)
+ - Gate with key `tour:dashboard:seen` (boolean) stored via `LocalStorageService`.
 
 Customization and troubleshooting details are in the Onboarding section at the end of this guide.
 
@@ -78,7 +81,7 @@ Customization and troubleshooting details are in the Onboarding section at the e
 - Flow: 6 modal steps; always centered with blurred/dimmed backdrop
 - Trigger: After login/first arrival to the dashboard, opens automatically if not completed
 - Service API: `open(step=1)`, `close()`, `next()`, `back()`, `isCompleted()`, `markCompleted()`
-- Persistence: Uses `localStorage` key `befluencer:account-onboarding.v1` to persist completion
+- Persistence: Uses `localStorage` (via `LocalStorageService`). Completion key: `account-onboarding.v1`.
 - Step 1: Welcome modal that matches the provided mock (orange “Welcome”, user name, supportive copy)
 - Steps 2–5: Placeholders for profile basics, socials, audience/categories, and preferences
 - Step 6: Review & Finish — marks completed and closes the flow
@@ -121,8 +124,16 @@ Dashboard wiring:
 
 ## 9. Internationalization (i18n)
 
-- Not yet configured; Angular i18n extraction can be enabled via `ng extract-i18n`
-- Keep strings centralized where possible to simplify future translation
+Library: `@ngx-translate/core` with a custom HttpClient loader.
+
+- Locale files: `public/assets/i18n/{en,fr,es,de,zh}.json`
+- Service: `src/app/shared/services/translation.service.ts` provides `current`, `use(lang)`, and `isRtl(lang)`; persists language in `localStorage` under `app:lang` and updates `<html lang>` and direction.
+- Bootstrap: `APP_INITIALIZER` applies the saved language at startup in `app.config.ts`.
+- Usage: `{{ 'key.path' | translate }}` in templates; keep keys descriptive.
+
+Notes:
+- RTL is detected for common right-to-left languages (ar, he, fa, ur).
+- Ensure all user-facing strings route through translation keys; avoid hard-coded literals.
 
 ## 10. Security
 
@@ -155,8 +166,9 @@ Dashboard wiring:
 - Symptom: Styles missing in production
   - Confirm Tailwind content glob includes all template locations
   - Verify `styles.scss` is included in `angular.json`
+  - Editor shows `@tailwind` unknown at-rule: this is a linter/editor warning only; the PostCSS build resolves it.
 
-## 14. Ownership & Contribution
+## 14.  Contribution
 
 - Code ownership: `src/app/features/*` by respective feature owners; shared components under `src/app/shared/*`
 - PR guidelines: Keep diffs small, include before/after screenshots for UI, and unit tests when logic changes
@@ -166,15 +178,12 @@ Dashboard wiring:
 
 This section defines the visual and interaction language to ensure consistency, quality, and scale across the app.
 
-### Brand voice
 
-- Friendly, clear, and confident; avoid jargon.
-- Guide creators through actions with concise labels and helpful microcopy.
 
 ### Typography
 
 - Primary font: Inter; headlines may use "Inter Tight" where appropriate.
-- Font stack: `Inter, system-ui, sans-serif` (set in `styles.scss`; also configured in Tailwind `fontFamily.inter` and `fontFamily.tight`).
+- Font stack: `poppins, sans-serif` (set in `styles.scss`; also configured in Tailwind `fontFamily.inter` and `fontFamily.tight`).
 - Prefer semantic elements (h1–h3, p, button) with Tailwind utilities for sizing/weight.
 
 ### Color palette
@@ -216,10 +225,6 @@ Gradients:
 - Tooltips: absolutely positioned; arrow via 14px rotated square; clamp to viewport.
 - Modals: include `role="dialog" aria-modal="true"`; blurred backdrop for high-emphasis flows.
 
-### Theming (light/dark)
-
-- Dark mode via `.dark` on `<body>`; background/text colors adapt in `styles.scss`.
-- Prefer Tailwind `dark:` variants for component-specific adjustments.
 
 ### Iconography
 
@@ -267,7 +272,7 @@ Gradients:
   - Update `totalSteps` accordingly
 
 - Persistence:
-  - Gate auto-open in the dashboard via `localStorage` flag (e.g., `bf-tour-seen=true`)
+  - Gate auto-open in the dashboard via `localStorage` flag `tour:dashboard:seen = true`
 
 ### Appendix B — Scripts
 
@@ -275,3 +280,4 @@ Gradients:
 - `npm run build` — prod build with budgets and hashing
 - `npm run watch` — development watch build
 - `npm run test` — unit tests (Karma/Jasmine)
+ - `ng serve` — alternatively start dev server (local CLI)

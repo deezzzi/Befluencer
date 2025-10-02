@@ -1,6 +1,6 @@
-# Frontend
+# Befluencer Frontend
 
-Angular version 19.2.15.
+Angular 19 standalone app with TailwindCSS, SCSS, and ngx-translate.
 
 ## Project documentation
 
@@ -8,15 +8,23 @@ For a comprehensive engineering guide (architecture, workflows, quality, operati
 
 - Design System & Branding: See the "Design System & Branding" section inside `documentation.md` for typography, colors, spacing, components, and accessibility guidelines.
 
-## Development server
+## Quick start
 
-To start a local development server, run:
+1) Install dependencies
 
 ```bash
-ng serve
+npm install
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+2) Start the dev server (http://localhost:4200/)
+
+```bash
+npm run start   
+```
+
+Tips
+- You can also use `ng serve`, but using npm scripts ensures the local CLI version is used.
+- Hot reload is enabled; edits to templates/styles/typescript will refresh the app.
 
 ## Code scaffolding
 
@@ -34,20 +42,20 @@ ng generate --help
 
 ## Building
 
-To build the project run:
+Create a production build into `dist/frontend`:
 
 ```bash
-ng build
+npm run build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+The production configuration applies output hashing and optimizations.
 
 ## Running unit tests
 
 To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
 
 ```bash
-ng test
+npm run test
 ```
 
 ## Running end-to-end tests
@@ -60,9 +68,30 @@ ng e2e
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
+## Internationalization (i18n)
+
+- Library: `@ngx-translate/core`
+- Locales: `public/assets/i18n/{en,fr,es,de,zh}.json`
+- Persistence key: `app:lang` in `localStorage`
+- At bootstrap, the saved language is applied and `<html lang>` / text direction are updated.
+
+See `src/app/shared/services/translation.service.ts` and `src/app/app.config.ts` for the loader and initializer.
+
+
+## Onboarding flows
+
+- Product Tour (in-app, tooltip-driven) and Account Onboarding (modal, 6 steps) are distinct.
+- The dashboard shows Account Onboarding on first visit, and gates the Tour until onboarding completes.
+
+Details and APIs are documented in `documentation.md`.
+
+## Troubleshooting
+
+- Tailwind warnings in editors: If your editor flags `@tailwind` or `theme()` as unknown in SCSS, it’s an editor warning only; the PostCSS build handles them.
+- Language not changing: Ensure locale files exist for the selected code and that `app:lang` isn’t blocked by the browser.
+- Brand logo path: Templates reference `/logo.PNG`. Ensure the asset exists in `public/` or update references to the actual file (e.g., `/logo-ds.PNG`).
+
 ## Additional Resources
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-
-
-For detailed behavior, anchors, and extension guidance, see `documentation.md`.
+- Angular CLI reference: https://angular.dev/tools/cli
+- Engineering guide: `documentation.md`

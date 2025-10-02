@@ -14,52 +14,7 @@ import { LocalStorageService } from '../../shared/services/local-storage.service
   selector: 'bf-otp-verification',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
-  template: `
-    <div class="otp-shell">
-      <div class="left purple">
-        <div class="brand">
-          <div class="logo">
-            <img class="mark full" src="/logo.PNG" alt="Befluencer logo" />
-          </div>
-        </div>
-      </div>
-      <div class="right">
-        <div class="topbar">
-          <a class="back-link" routerLink="/signup/creator">&larr; Back</a>
-          <div class="mini-logo">
-            <img class="mark" src="/logo-ds.PNG" alt="Befluencer logo" />
-          </div>
-        </div>
-
-        <div class="form-wrap">
-          <h1 class="title">OTP Verification</h1>
-          <p class="subtitle">
-             the dashboard on
-            {{ maskedEmail }}
-          </p>
-
-          <form [formGroup]="form" novalidate (ngSubmit)="onVerify()">
-            <label class="field">
-              <span>Enter Code</span>
-              <div class="otp">
-                <input #otpInput *ngFor="let c of code.controls; index as i" maxlength="1" inputmode="numeric" pattern="[0-9]*"
-                       [formControl]="c" (input)="onInput(i)" (keydown)="onKeyDown($event, i)" (paste)="onPaste($event)" />
-              </div>
-            </label>
-
-            <div class="resend">
-              Didn't&nbsp; receive the OTP?
-              <button type="button" class="link" [disabled]="cooldown > 0" (click)="resend()">
-                {{ cooldown > 0 ? 'Resend in ' + cooldown + 's' : 'Resend OTP' }}
-              </button>
-            </div>
-
-            <button class="cta" type="submit" [disabled]="!form.valid">Verify</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  `,
+  templateUrl: './otp-verification.component.html',
   styleUrls: ['./otp-verification.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })

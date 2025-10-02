@@ -74,7 +74,7 @@ export class AccountOnboardingService {
   goalOther$ = this._goalOther$.asObservable();
 
   constructor() {
-    // Hydrate persisted progress/state on service creation.
+    //  persisted progress/state on service creation.
   const saved = this.storage.getJSON<string[]>('account-onboarding:content-types');
   if (Array.isArray(saved)) this._contentTypes$.next(new Set(saved));
   const ctOther = this.storage.getJSON<string>('account-onboarding:content-other');

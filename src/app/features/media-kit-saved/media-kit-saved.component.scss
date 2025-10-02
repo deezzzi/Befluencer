@@ -1,0 +1,58 @@
+/* Styles extracted from inline styles for MediaKitSavedComponent */
+.saved-wrapper {
+  padding: 1.8rem 1.6rem 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.saved-card {
+  width: 100%;
+  max-width: 1280px;
+  background: transparent;
+  padding: 0;
+}
+
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding: 0 .25rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  border: 1px solid #ff7a00;
+  background: #ff7a00;
+  color: #fff;
+  padding: .45rem .85rem;
+  border-radius: 999px;
+  font-size: .55rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.export-btn svg {
+  display: block;
+}
+
+.export-btn:hover {
+  background: #ff8e26;
+  border-color: #ff8e26;
+}
+
+/* Saved page-only adjustment: add extra space between Basic Info and Socials & Stat on desktop */
+@media (min-width: 1101px) {
+  .saved-wrapper .preview-grid.design-layout .area-socials {
+    margin-top: 15px !important;
+  }
+}
