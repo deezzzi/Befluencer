@@ -5,10 +5,10 @@ import { TopbarComponent } from '../shared/topbar/topbar.component';
 
 /**
  * DashboardLayoutComponent
- *
- * Shell layout for authenticated areas.
- * - Hosts the persistent Sidebar and Topbar and a scrollable <router-outlet/> content area.
- * - Tracks sidebar collapsed state via Angular signals; Topbar mirrors the state for its toggle button.
+ * ------------------------
+ * Shell for authenticated areas.
+ * - Hosts persistent Sidebar/Topbar and a scrollable content outlet
+ * - Tracks sidebar collapsed state via Angular signals
  */
 @Component({
   selector: 'bf-dashboard-layout',

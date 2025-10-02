@@ -6,12 +6,10 @@ import { Router, RouterLink } from '@angular/router';
 /**
  * LoginComponent
  * ---------------
- * Login screen mirroring signup styling.
- *
- * Notes:
- * - Reactive form validation for email/password.
- * - Forgot password link routes to the dedicated OTP-forgot flow.
- * - Replace TODO with real auth integration and error states.
+ * Simple reactive login form.
+ * - Validates email/password and shows basic inline errors
+ * - Forgot password link routes to the OTP-forgot flow
+ * - Replace placeholder submit with real auth integration + error states
  */
 @Component({
   selector: 'bf-login',

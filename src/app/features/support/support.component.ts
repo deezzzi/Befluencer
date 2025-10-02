@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+/** Support placeholder page. */
 @Component({
   selector: 'bf-support-page',
   standalone: true,

@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+/** Tasks placeholder page. */
 @Component({
   selector: 'bf-tasks-page',
   standalone: true,

@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+/** Settings placeholder page. */
 
 @Component({
   selector: 'bf-settings-page',

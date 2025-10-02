@@ -7,11 +7,11 @@ interface NavItem { icon: string; label: string; route: string; hasChildren?: bo
 
 /**
  * SidebarComponent
- *
+ * ----------------
  * Collapsible primary navigation for dashboard routes.
- * - Receives `collapsed` state and emits `toggle` to parent layout.
- * - Renders a static nav map; active route highlighted via RouterLinkActive.
- * - Icons are inlined SVGs selected via ngSwitch for minimal runtime cost.
+ * - Input `collapsed` drives width styles and label visibility
+ * - Emits `toggle` so parent can control layout state
+ * - Inlines SVG icons for consistency and low runtime overhead
  */
 @Component({
   selector: 'bf-sidebar',

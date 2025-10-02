@@ -7,6 +7,7 @@ import { LocalStorageService } from '../../shared/services/local-storage.service
 import { AccountOnboardingOverlayComponent } from '../../shared/account-onboarding/account-onboarding-overlay.component';
 import { AccountOnboardingService } from '../../shared/account-onboarding/account-onboarding.service';
 
+/** Minimal stat card model used for the KPI tiles. */
 interface StatCard { tkey: string; value: string; diff?: number; }
 
 @Component({
@@ -146,7 +147,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
       setTimeout(() => this.accountOnboarding.open(1), 300);
 
       // When onboarding closes as completed, trigger the Tour after ~5s (once).
-      // We detect the first open->close transition and then check completion.
+      // Detect first open->close transition and then check completion.
       let seenOpen = false;
       this.onboardingSub = this.accountOnboarding.open$.subscribe(open => {
         if (open) {
@@ -170,6 +171,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     }
   }
 
+  // Avoid memory leaks
   ngOnDestroy(): void {
     this.onboardingSub?.unsubscribe?.();
   }

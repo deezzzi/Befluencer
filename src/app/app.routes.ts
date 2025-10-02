@@ -1,15 +1,4 @@
-/**
- * Application Routes
- *
- * Structure
- * - Public landing and auth flows live at the top level for small/clean URLs.
- * - Auth screens are lazy-loaded to keep initial bundle small (faster first paint).
- * - Dashboard area is nested under a layout component and hosts feature routes.
- *
- * Conventions
- * - Each route specifies a `data.title` for document title management (future hook).
- * - Prefer `loadComponent` for standalone, lazy pages.
- */
+/** Simple application routes. Public pages at root, dashboard features under a layout. */
 import { Routes } from '@angular/router';
 import { DashboardLayoutComponent } from './layout/dashboard-layout.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';

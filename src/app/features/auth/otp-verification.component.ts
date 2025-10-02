@@ -7,7 +7,7 @@ import { LocalStorageService } from '../../shared/services/local-storage.service
 /**
  * OtpVerificationComponent
  * ------------------------
- * 4-digit OTP input UX with auto-advance, backspace navigation, arrow key support, and paste distribute.
+ * 4-digit OTP input backspace navigation, arrow key support, and paste distribute.
  * Includes resend cooldown timer and masked email display.
  */
 @Component({
@@ -175,7 +175,7 @@ export class OtpVerificationComponent implements OnDestroy {
     }, 1000);
   }
 
-  /** Ensure timer is cleaned up to avoid leaks. */
+  /** Ensuring timer is cleaned up to avoid leaks. */
   ngOnDestroy(): void {
     if (this.timerId) {
       clearInterval(this.timerId);
@@ -183,7 +183,7 @@ export class OtpVerificationComponent implements OnDestroy {
     }
   }
 
-  /** Submit handler: verify the code then proceed to Dashboard. */
+  /** Submit handler to verify the code then proceed to Dashboard. */
   onVerify() {
     if (this.form.valid) {
       const value = this.code.controls.map(c => c.value).join('');

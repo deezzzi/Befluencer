@@ -1,29 +1,41 @@
 import { Injectable } from '@angular/core';
 
 /**
- * Thin wrapper around browser localStorage with namespacing and JSON helpers.
+ * LocalStorageService
+ * -------------------
+ * Small, safe wrapper around window.localStorage with:
+ * - App-level namespacing to avoid key collisions (prefix: `befluencer:`)
+ * - JSON helpers for ergonomic set/get of structured data
+ * - Defensive error handling (quota, serialization) to avoid breaking UX
  *
- * Notes
- * - Errors (quota, serialization) are intentionally swallowed to avoid UX breaks.
- * - Consider adding telemetry to track failure rates in production.
+ * Tip: If you care about failures in production, add telemetry in the catch blocks.
  */
 @Injectable({ providedIn: 'root' })
 export class LocalStorageService {
   private prefix = 'befluencer:';
 
-  /** Persist a JSON-serializable value under a namespaced key. */
+  /**
+   * Persist a JSON-serializable value under a namespaced key.
+   *
+   * @param key Logical key without prefix (e.g. `auth:user`)
+   * @param value Any JSON-serializable value
+   */
   setJSON<T>(key: string, value: T): void {
     try {
       const payload = JSON.stringify(value);
       localStorage.setItem(this.prefix + key, payload);
-    } catch (e) {
+    } catch {
       // Swallow errors (storage quota, serialization) to avoid breaking UX
-      // Consider adding telemetry here
-      // console.warn('LocalStorage setJSON failed', e);
+      // e.g. Safari private mode or exceeded quota
     }
   }
 
-  /** Retrieve a JSON value (null on any error or missing). */
+  /**
+   * Retrieve a JSON value by key.
+   *
+   * @param key Logical key without prefix
+   * @returns Parsed value or null if missing/invalid/unparsable
+   */
   getJSON<T>(key: string): T | null {
     try {
       const raw = localStorage.getItem(this.prefix + key);
@@ -34,8 +46,16 @@ export class LocalStorageService {
     }
   }
 
-  /** Remove a namespaced key. */
+  /**
+   * Remove a namespaced key.
+   *
+   * @param key Logical key without prefix
+   */
   remove(key: string): void {
-    try { localStorage.removeItem(this.prefix + key); } catch { /* noop */ }
+    try {
+      localStorage.removeItem(this.prefix + key);
+    } catch {
+      // noop
+    }
   }
 }

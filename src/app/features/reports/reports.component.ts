@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
+/** Reports placeholder page. */
   selector: 'bf-reports-page',
   standalone: true,
   template: `

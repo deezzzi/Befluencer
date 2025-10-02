@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+/** Wallet placeholder page. */
 @Component({
   selector: 'bf-wallet-page',
   standalone: true,

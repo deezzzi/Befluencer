@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+/** Community placeholder page. */
 @Component({
   selector: 'bf-community-page',
   standalone: true,

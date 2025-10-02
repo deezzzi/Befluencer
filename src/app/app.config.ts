@@ -8,6 +8,7 @@ import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-transla
 
 import { routes } from './app.routes';
 
+/** Custom TranslateLoader fetching locale files from /assets/i18n/{lang}.json */
 class AppTranslateLoader implements TranslateLoader {
   constructor(private http: HttpClient) {}
   getTranslation(lang: string) {
@@ -15,6 +16,7 @@ class AppTranslateLoader implements TranslateLoader {
   }
 }
 
+/** Initialize i18n before app bootstraps so first paint is localized. */
 function initTranslateFactory() {
   return () => {
     const translate = inject(TranslateService);

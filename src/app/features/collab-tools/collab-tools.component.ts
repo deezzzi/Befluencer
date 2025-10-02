@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+/** Collaboration tools placeholder page. */
 @Component({
   selector: 'bf-collab-tools-page',
   standalone: true,

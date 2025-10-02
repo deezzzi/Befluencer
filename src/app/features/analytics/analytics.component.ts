@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+/** Analytics placeholder page. */
 @Component({
   selector: 'bf-analytics-page',
   standalone: true,

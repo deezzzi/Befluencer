@@ -5,11 +5,11 @@ import { LocalStorageService } from '../services/local-storage.service';
 
 /**
  * TopbarComponent
- *
- * Minimal app bar for authenticated views.
- * - Displays current page title derived from the deepest activated route's data.title.
- * - Exposes a theme toggle and back navigation helper (kept hidden per design for now).
- * - Mirrors sidebar collapsed state only to show a consistent toggle affordance alongside user avatar.
+ * ---------------
+ * Lightweight app bar for authenticated views.
+ * - Title is pulled from the deepest ActivatedRoute data.title.
+ * - Theme toggle and back button helpers are included for future use.
+ * - The "collapsed" input mirrors sidebar state so the UI can stay in sync.
  */
 @Component({
   selector: 'bf-topbar',
@@ -75,12 +75,14 @@ export class TopbarComponent {
     return cur;
   }
 
+  /** Toggle dark mode by toggling root .dark class. */
   toggleTheme() {
     this._dark.update(v => !v);
     const root = document.documentElement;
     if (this._dark()) root.classList.add('dark'); else root.classList.remove('dark');
   }
 
+  /** Navigate back if possible; fallback to dashboard. */
   goBack() {
     // Simple history back fallback to dashboard
     if (window.history.length > 1) {
@@ -101,6 +103,7 @@ export class TopbarComponent {
     return 'John Doe';
   }
 
+  /** Derive up to two-letter initials from a display name. */
   private makeInitials(name: string): string {
     const parts = (name || '').trim().split(/\s+/).filter(Boolean);
     if (parts.length === 0) return 'U';

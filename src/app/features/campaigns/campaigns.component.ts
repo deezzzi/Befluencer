@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+/** Campaigns placeholder page. */
 @Component({
   selector: 'bf-campaigns-page',
   standalone: true,
